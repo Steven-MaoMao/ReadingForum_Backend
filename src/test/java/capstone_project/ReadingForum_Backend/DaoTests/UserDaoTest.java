@@ -55,4 +55,69 @@ public class UserDaoTest {
             System.out.println(dataList);
         }
     }
+
+    @Test
+    public void insertTest() throws IOException {
+        String username = "user02";
+        String password = "123456";
+
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            UserDao mapper = session.getMapper(UserDao.class);
+            mapper.insert(username, password);
+        }
+    }
+
+    @Test
+    public void updateByIdTest() throws IOException {
+        int id = 1;
+        String password = "123456";
+        String nickname = "帽帽";
+        String avatar = null;
+        String gender = "男";
+        String birthday = "2000-10-18";
+        String phone = "18116468332";
+        String email = "mjdfx120312@163.com";
+        String location = "上海";
+        String bio = "(^_^)";
+        String state = null;
+        boolean deleted = false;
+
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            UserDao mapper = session.getMapper(UserDao.class);
+            mapper.updateById(id, password, nickname, avatar, gender, birthday, phone, email, location, bio, state, deleted);
+        }
+    }
+
+    @Test
+    public void updateByUsernameTest() throws IOException {
+        String username = "user01";
+        String password = "123456";
+        String nickname = "帽帽";
+        String avatar = null;
+        String gender = "男";
+        String birthday = "2000-10-18";
+        String phone = "18116468332";
+        String email = "mjdfx120312@163.com";
+        String location = "上海";
+        String bio = "\\(^_^)/";
+        String state = null;
+        boolean deleted = false;
+
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            UserDao mapper = session.getMapper(UserDao.class);
+            mapper.updateByUsername(username, password, nickname, avatar, gender, birthday, phone, email, location, bio, state, deleted);
+        }
+    }
 }

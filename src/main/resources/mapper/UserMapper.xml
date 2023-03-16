@@ -14,4 +14,16 @@
     <select id="selectByUsername" resultType="capstone_project.ReadingForum_Backend.Model.User">
         select * from user where username=#{username}
     </select>
+
+    <insert id="insert">
+        insert into user (username, password) values (#{username}, #{password})
+    </insert>
+
+    <update id="updateById">
+        update user set password=#{password}, nickname=#{nickname}, avatar=#{avatar}, gender=#{gender}, birthday=#{birthday}, phone=#{phone}, email=#{email}, location=#{location}, bio=#{bio}, state=#{state}, deleted=#{deleted} where id=#{id}
+    </update>
+
+    <update id="updateByUsername">
+        update user set password=#{password}, nickname=#{nickname}, avatar=#{avatar}, gender=#{gender}, birthday=#{birthday}, phone=#{phone}, email=#{email}, location=#{location}, bio=#{bio}, state=#{state}, deleted=#{deleted} where username=#{username}
+    </update>
 </mapper>
