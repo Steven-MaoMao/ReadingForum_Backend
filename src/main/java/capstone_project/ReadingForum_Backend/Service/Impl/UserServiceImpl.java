@@ -2,53 +2,53 @@ package capstone_project.ReadingForum_Backend.Service.Impl;
 
 import capstone_project.ReadingForum_Backend.Dao.UserDao;
 import capstone_project.ReadingForum_Backend.Model.User;
+import capstone_project.ReadingForum_Backend.Service.IUserService;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class UserServiceImpl {
-    List<User> selectAll() throws IOException {
+@Service
+public class UserServiceImpl implements IUserService {
+    public List<User> selectAll() throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             UserDao mapper = session.getMapper(UserDao.class);
-            List<User> dataList = mapper.selectAll();
-            return dataList;
+            return mapper.selectAll();
         }
     }
 
-    User selectById(int id) throws IOException {
+    public User selectById(int id) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             UserDao mapper = session.getMapper(UserDao.class);
-            User dataList = mapper.selectById(id);
-            return dataList;
+            return mapper.selectById(id);
         }
     }
 
-    User selectByUsername(String username) throws IOException {
+    public User selectByUsername(String username) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             UserDao mapper = session.getMapper(UserDao.class);
-            User dataList = mapper.selectByUsername(username);
-            return dataList;
+            return mapper.selectByUsername(username);
         }
     }
 
-    boolean insert(String username, String password) throws IOException {
+    public boolean insert(String username, String password) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
@@ -62,7 +62,7 @@ public class UserServiceImpl {
         }
     }
 
-    boolean updateById(int id, String password, String nickname, String avatar, String gender, String birthday, String phone, String email, String location, String bio, String state, boolean deleted) throws IOException {
+    public boolean updateById(int id, String password, String nickname, String avatar, String gender, String birthday, String phone, String email, String location, String bio, String state, boolean deleted) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
@@ -76,7 +76,7 @@ public class UserServiceImpl {
         }
     }
 
-    boolean updateByUsername(String username, String password, String nickname, String avatar, String gender, String birthday, String phone, String email, String location, String bio, String state, boolean deleted) throws IOException {
+    public boolean updateByUsername(String username, String password, String nickname, String avatar, String gender, String birthday, String phone, String email, String location, String bio, String state, boolean deleted) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
