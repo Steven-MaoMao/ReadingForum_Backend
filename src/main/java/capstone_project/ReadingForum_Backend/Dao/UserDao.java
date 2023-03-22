@@ -9,6 +9,5 @@ public interface UserDao {
     User selectById(int id);
     User selectByUsername(String username);
     void insert(String username, String password);
-    void updateById(int id, String password, String nickname, String avatar, String gender, String birthday, String phone, String email, String location, String bio, String state, boolean deleted);
-    void updateByUsername(String username, String password, String nickname, String avatar, String gender, String birthday, String phone, String email, String location, String bio, String state, boolean deleted);
+    void update(User user);
 }

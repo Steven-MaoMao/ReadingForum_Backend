@@ -55,4 +55,73 @@ public class UserController {
             return result;
         }
     }
+
+    @DeleteMapping
+    public Result delete(@RequestHeader("token") String token) {
+        try {
+            String username = JWT.parseToken(token);
+            User user = userService.selectByUsername(username);
+            Result result = new Result();
+            if (user.isDeleted()) {
+                result.setMessage("已删除！");
+            } else {
+                user.setDeleted(true);
+                userService.update(user);
+                result.setCode(1);
+                result.setMessage("删除成功！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PutMapping("/updatePassword")
+    public Result updatePassword(@RequestHeader("token") String token, @RequestBody Map<String, String> map) {
+        try {
+            String username = JWT.parseToken(token);
+            User user = userService.selectByUsername(username);
+            Result result = new Result();
+            if (user.getPassword().equals(map.get("oldPassword"))) {
+                user.setPassword(map.get("newPassword"));
+                userService.update(user);
+                result.setCode(1);
+                result.setMessage("修改密码成功！");
+            } else {
+                result.setMessage("原密码错误，修改密码失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PutMapping("/updatepersonalinfo")
+    public Result updatePersonalInfo(@RequestHeader("token") String token, @RequestBody Map<String, String> map) {
+        try {
+            String username = JWT.parseToken(token);
+            User user = userService.selectByUsername(username);
+            user.setNickname(map.get("nickname"));
+            user.setAvatar(map.get("avatar"));
+            user.setGender(map.get("gender"));
+            user.setBirthday(map.get("birthday"));
+            user.setPhone(map.get("phone"));
+            user.setEmail(map.get("email"));
+            user.setLocation(map.get("location"));
+            user.setBio(map.get("bio"));
+            userService.update(user);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("修改个人信息成功！");
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
 }

@@ -10,8 +10,8 @@ public class Result {
     /*
     * 0   失败
     * 1   成功
-    * 100 token过期
+    * 100 token失效
     * */
-    private String message = "";
+    private String message = null;
     private Map<String, String> data = null;
 }
