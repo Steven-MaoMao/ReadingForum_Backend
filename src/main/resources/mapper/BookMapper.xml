@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="capstone_project.ReadingForum_Backend.Dao.BookDao">
+    <select id="selectAll" resultType="capstone_project.ReadingForum_Backend.Model.Book">
+        select * from book where deleted=0
+    </select>
+
+    <select id="selectById" resultType="capstone_project.ReadingForum_Backend.Model.Book">
+        select * from book where id=#{id}
+    </select>
+
+    <select id="selectByNamePublisher" resultType="capstone_project.ReadingForum_Backend.Model.Book">
+        select * from book where name=#{name} and publisher=#{publisher}
+    </select>
+
+    <insert id="insert">
+        insert into user (name, author, publisher, publish_time, ISBN, author_introduction, book_introduction) values (#{name}, #{author}, #{publisher}, #{publish_time}, #{ISBN}, #{author_introduction}, #{book_introduction})
+    </insert>
+
+    <update id="update">
+        update user set name=#{name}, author=#{author}, publisher=#{publisher}, publish_time=#{publish_time}, ISBN=#{ISBN}, author_introduction=#{author_induction}, book_introduction=#{book_introduction}, state=#{state}, deleted=#{deleted} where id=#{id}
+    </update>
+</mapper>
