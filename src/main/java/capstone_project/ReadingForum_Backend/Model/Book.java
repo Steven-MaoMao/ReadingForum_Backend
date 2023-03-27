@@ -12,6 +12,6 @@ public class Book {
     private String ISBN;
     private String author_introduction;
     private String book_introduction;
-    private String state;
+    private boolean ban;
     private boolean deleted;
 }

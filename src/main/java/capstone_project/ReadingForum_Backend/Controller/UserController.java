@@ -4,12 +4,14 @@ import capstone_project.ReadingForum_Backend.Model.User;
 import capstone_project.ReadingForum_Backend.Service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/user")
 public class UserController {
     @Autowired
@@ -20,12 +22,22 @@ public class UserController {
         try {
             Result result = new Result();
             User user = userService.selectByUsername(map.get("username"));
-            if (user != null && user.getPassword().equals(map.get("password"))) {
+            if (user != null && user.getPassword().equals(map.get("password")) && !user.isBan()) {
                 result.setCode(1);
                 result.setMessage("登录成功！");
                 Map<String, String> data = new HashMap<String, String>();
                 data.put("token", JWT.createToken(user.getUsername()));
+                data.put("username", user.getUsername());
+                data.put("nickname", user.getNickname());
+                data.put("gender", user.getGender());
+                data.put("birthday", user.getBirthday());
+                data.put("phone", user.getPhone());
+                data.put("email", user.getEmail());
+                data.put("location", user.getLocation());
+                data.put("bio", user.getBio());
                 result.setData(data);
+            } else if (user.isBan()) {
+                result.setMessage("账号状态异常，登录失败！");
             } else {
                 result.setMessage("账号或密码错误，登录失败！");
             }
@@ -100,7 +112,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/updatepersonalinfo")
+    @PutMapping("/updatePersonalInfo")
     public Result updatePersonalInfo(@RequestHeader("token") String token, @RequestBody Map<String, String> map) {
         try {
             String username = JWT.parseToken(token);
@@ -121,6 +133,42 @@ public class UserController {
         } catch (Exception e) {
             Result result = new Result();
             result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PostMapping("/uploadAvatar")
+    public Result uploadAvatar(@RequestHeader("token") String token, @RequestParam("file") MultipartFile newAvatar) {
+        try {
+            String username = JWT.parseToken(token);
+            User user = userService.selectByUsername(username);
+            Result result = new Result();
+            if (newAvatar.isEmpty()) {
+                result.setMessage("文件为空，上传失败！");
+                return result;
+            }
+            String[] splitFilename = newAvatar.getOriginalFilename().split("\\.");
+            String ext = "." + splitFilename[splitFilename.length - 1];
+            String uuid = UUID.randomUUID().toString();
+            String newAvatarName = "D:\\上海大学\\计算机学院\\毕设\\BackendData\\Avatar\\" + uuid + ext;
+            newAvatar.transferTo(new File(newAvatarName));
+            if (user.getAvatar() != null) {
+                File oldAvatar = new File(user.getAvatar());
+                if (oldAvatar.exists()) {
+                    oldAvatar.delete();
+                }
+            }
+            user.setAvatar(newAvatarName);
+            userService.update(user);
+            result.setCode(1);
+            result.setMessage("上传成功！");
+            Map map = new HashMap<String, String>();
+            map.put("path", newAvatarName);
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("上传失败！");
             return result;
         }
     }

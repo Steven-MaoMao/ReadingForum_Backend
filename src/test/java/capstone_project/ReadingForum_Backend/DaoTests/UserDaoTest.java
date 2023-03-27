@@ -74,9 +74,10 @@ public class UserDaoTest {
     @Test
     public void updateTest() throws IOException {
         User user = new User();
-        user.setId(1);
+        user.setId(7);
         user.setUsername("user01");
         user.setPassword("123456");
+        user.setAvatar("D:\\上海大学\\计算机学院\\毕设\\BackendData\\Avatar");
 
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);

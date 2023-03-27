@@ -8,11 +8,11 @@
     </select>
 
     <select id="selectById" resultType="capstone_project.ReadingForum_Backend.Model.Book">
-        select * from book where id=#{id}
+        select * from book where id=#{id} where deleted=0
     </select>
 
     <select id="selectByNamePublisher" resultType="capstone_project.ReadingForum_Backend.Model.Book">
-        select * from book where name=#{name} and publisher=#{publisher}
+        select * from book where name=#{name} and publisher=#{publisher} where deleted=0
     </select>
 
     <insert id="insert">
@@ -20,6 +20,6 @@
     </insert>
 
     <update id="update">
-        update user set name=#{name}, author=#{author}, publisher=#{publisher}, publish_time=#{publish_time}, ISBN=#{ISBN}, author_introduction=#{author_induction}, book_introduction=#{book_introduction}, state=#{state}, deleted=#{deleted} where id=#{id}
+        update user set name=#{name}, author=#{author}, publisher=#{publisher}, publish_time=#{publish_time}, ISBN=#{ISBN}, author_introduction=#{author_induction}, book_introduction=#{book_introduction}, ban=#{ban}, deleted=#{deleted} where id=#{id}
     </update>
 </mapper>

@@ -8,11 +8,11 @@
     </select>
 
     <select id="selectById" resultType="capstone_project.ReadingForum_Backend.Model.User">
-        select * from user where id=#{id}
+        select * from user where id=#{id} and deleted=0
     </select>
 
     <select id="selectByUsername" resultType="capstone_project.ReadingForum_Backend.Model.User">
-        select * from user where username=#{username}
+        select * from user where username=#{username} and deleted=0
     </select>
 
     <insert id="insert">
@@ -20,6 +20,6 @@
     </insert>
 
     <update id="update">
-        update user set password=#{password}, nickname=#{nickname}, avatar=#{avatar}, gender=#{gender}, birthday=#{birthday}, phone=#{phone}, email=#{email}, location=#{location}, bio=#{bio}, state=#{state}, deleted=#{deleted} where id=#{id}
+        update user set password=#{password}, nickname=#{nickname}, avatar=#{avatar}, gender=#{gender}, birthday=#{birthday}, phone=#{phone}, email=#{email}, location=#{location}, bio=#{bio}, ban=#{ban}, deleted=#{deleted} where id=#{id}
     </update>
 </mapper>

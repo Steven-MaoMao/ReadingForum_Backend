@@ -15,6 +15,6 @@ public class User {
     private String email;
     private String location;
     private String bio;
-    private String state;
+    private boolean ban;
     private boolean deleted;
 }
