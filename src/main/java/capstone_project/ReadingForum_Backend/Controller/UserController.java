@@ -3,6 +3,7 @@ package capstone_project.ReadingForum_Backend.Controller;
 import capstone_project.ReadingForum_Backend.Model.User;
 import capstone_project.ReadingForum_Backend.Service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +29,7 @@ public class UserController {
                 Map<String, String> data = new HashMap<String, String>();
                 data.put("token", JWT.createToken(user.getUsername()));
                 data.put("username", user.getUsername());
+                data.put("avatar", user.getAvatar());
                 data.put("nickname", user.getNickname());
                 data.put("gender", user.getGender());
                 data.put("birthday", user.getBirthday());
@@ -137,6 +139,9 @@ public class UserController {
         }
     }
 
+    @Value("${web.uploadPath}")
+    private String baseUploadPath;
+
     @PostMapping("/uploadAvatar")
     public Result uploadAvatar(@RequestHeader("token") String token, @RequestParam("file") MultipartFile newAvatar) {
         try {
@@ -150,25 +155,53 @@ public class UserController {
             String[] splitFilename = newAvatar.getOriginalFilename().split("\\.");
             String ext = "." + splitFilename[splitFilename.length - 1];
             String uuid = UUID.randomUUID().toString();
-            String newAvatarName = "D:\\上海大学\\计算机学院\\毕设\\BackendData\\Avatar\\" + uuid + ext;
+            String newAvatarName = baseUploadPath + "avatar/" + uuid + ext;
             newAvatar.transferTo(new File(newAvatarName));
             if (user.getAvatar() != null) {
-                File oldAvatar = new File(user.getAvatar());
+                File oldAvatar = new File(baseUploadPath + user.getAvatar().substring(10));
                 if (oldAvatar.exists()) {
                     oldAvatar.delete();
                 }
             }
-            user.setAvatar(newAvatarName);
+            String avatarPath = "/resources/avatar/" + uuid + ext;
+            user.setAvatar(avatarPath);
             userService.update(user);
             result.setCode(1);
             result.setMessage("上传成功！");
             Map map = new HashMap<String, String>();
-            map.put("path", newAvatarName);
+            map.put("path", avatarPath);
             result.setData(map);
             return result;
         } catch (Exception e) {
             Result result = new Result();
             result.setMessage("上传失败！");
+            return result;
+        }
+    }
+
+    @GetMapping()
+    public Result getUserInfo(@RequestHeader("token") String token) {
+        try {
+            String username = JWT.parseToken(token);
+            User user = userService.selectByUsername(username);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("获取用户信息成功！");
+            Map map = new HashMap<String, String>();
+            map.put("username", user.getUsername());
+            map.put("avatar", user.getAvatar());
+            map.put("nickname", user.getNickname());
+            map.put("gender", user.getGender());
+            map.put("birthday", user.getBirthday());
+            map.put("phone", user.getPhone());
+            map.put("email", user.getEmail());
+            map.put("location", user.getLocation());
+            map.put("bio", user.getBio());
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("获取用户信息失败！");
             return result;
         }
     }
