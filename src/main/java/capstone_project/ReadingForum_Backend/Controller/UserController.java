@@ -120,7 +120,6 @@ public class UserController {
             String username = JWT.parseToken(token);
             User user = userService.selectByUsername(username);
             user.setNickname(map.get("nickname"));
-            user.setAvatar(map.get("avatar"));
             user.setGender(map.get("gender"));
             user.setBirthday(map.get("birthday"));
             user.setPhone(map.get("phone"));
