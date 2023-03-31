@@ -15,11 +15,15 @@
         select * from book where name=#{name} and publisher=#{publisher} where deleted=0
     </select>
 
+    <select id="selectFavouriteByPage" resultType="capstone_project.ReadingForum_Backend.Model.Book">
+        select * from book where id in (select book_id from favourite where user_id=#{id}) and deleted=0 limit #{start},16
+    </select>
+
     <insert id="insert">
         insert into user (name, author, publisher, publish_time, ISBN, author_introduction, book_introduction) values (#{name}, #{author}, #{publisher}, #{publish_time}, #{ISBN}, #{author_introduction}, #{book_introduction})
     </insert>
 
     <update id="update">
-        update user set name=#{name}, author=#{author}, publisher=#{publisher}, publish_time=#{publish_time}, ISBN=#{ISBN}, author_introduction=#{author_induction}, book_introduction=#{book_introduction}, ban=#{ban}, deleted=#{deleted} where id=#{id}
+        update user set name=#{name}, author=#{author}, publisher=#{publisher}, publish_time=#{publish_time}, ISBN=#{ISBN}, author_introduction=#{author_induction}, book_introduction=#{book_introduction}, deleted=#{deleted} where id=#{id}
     </update>
 </mapper>

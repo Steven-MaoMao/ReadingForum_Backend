@@ -48,6 +48,18 @@ public class BookServiceImpl implements IBookService {
         }
     }
 
+    @Override
+    public List<Book> selectFavouriteByPage(int id, int start) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            BookDao mapper = session.getMapper(BookDao.class);
+            return mapper.selectFavouriteByPage(id, start);
+        }
+    }
+
     public boolean insert(Book book) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);

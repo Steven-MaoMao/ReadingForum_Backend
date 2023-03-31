@@ -4,17 +4,17 @@ import lombok.Data;
 
 @Data
 public class User {
-    private int id;
-    private String username;
-    private String password;
-    private String nickname;
-    private String avatar;
-    private String gender;
-    private String birthday;
-    private String phone;
-    private String email;
-    private String location;
-    private String bio;
-    private boolean ban;
-    private boolean deleted;
+    private int id = 0;
+    private String username = null;
+    private String password = null;
+    private String nickname = null;
+    private String avatar = null;
+    private String gender = null;
+    private String birthday = null;
+    private String phone = null;
+    private String email = null;
+    private String location = null;
+    private String bio = null;
+    private boolean ban = false;
+    private boolean deleted = false;
 }

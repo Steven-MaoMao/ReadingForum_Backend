@@ -4,14 +4,13 @@ import lombok.Data;
 
 @Data
 public class Book {
-    private int id;
-    private String name;
-    private String author;
-    private String publisher;
-    private String publish_time;
-    private String ISBN;
-    private String author_introduction;
-    private String book_introduction;
-    private boolean ban;
-    private boolean deleted;
+    private int id = 0;
+    private String name = null;
+    private String author = null;
+    private String publisher = null;
+    private String publish_time = null;
+    private String ISBN = null;
+    private String author_introduction = null;
+    private String book_introduction = null;
+    private boolean deleted = false;
 }

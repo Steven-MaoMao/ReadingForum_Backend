@@ -13,5 +13,5 @@ public class Result {
     * 100 token失效
     * */
     private String message = null;
-    private Map<String, String> data = null;
+    private Map<String, Object> data = null;
 }

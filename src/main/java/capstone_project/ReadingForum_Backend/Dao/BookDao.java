@@ -8,6 +8,7 @@ public interface BookDao {
     List<Book> selectAll();
     Book selectById(int id);
     Book selectByNamePublisher(String name, String publisher);
+    List<Book> selectFavouriteByPage(int id, int start);
     void insert(Book book);
     void update(Book book);
 }
