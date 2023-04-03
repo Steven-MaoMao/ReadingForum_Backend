@@ -56,11 +56,13 @@ public class UserController {
             int id = userService.selectByUsername(username).getId();
             int start = (page - 1) * 16 + 1;
             List<Book> bookList = bookService.selectFavouriteByPage(id, start);
+            int num = bookService.selectFavouriteNum(id);
             Result result = new Result();
             result.setCode(1);
             result.setMessage("获取用户收藏成功！");
             Map data = new HashMap<String, Object>();
             data.put("bookList", bookList);
+            data.put("num", num);
             result.setData(data);
             return result;
         } catch (Exception e) {

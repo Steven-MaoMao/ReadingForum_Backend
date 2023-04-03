@@ -10,6 +10,7 @@ public interface IBookService {
     Book selectById(int id) throws IOException;
     Book selectByNamePublisher(String name, String publisher) throws IOException;
     List<Book> selectFavouriteByPage(int id, int start) throws IOException;
+    int selectFavouriteNum(int id) throws IOException;
     boolean insert(Book book) throws IOException;
     boolean update(Book book) throws IOException;
 }

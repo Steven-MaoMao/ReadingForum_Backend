@@ -19,4 +19,11 @@ public class BookServiceTest {
 
         System.out.println(bookService.selectFavouriteByPage(id, start));
     }
+
+    @Test
+    public void selectFavouriteNumTest() throws IOException {
+        int id = 7;
+
+        System.out.println(bookService.selectFavouriteNum(id));
+    }
 }

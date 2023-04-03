@@ -16,7 +16,11 @@
     </select>
 
     <select id="selectFavouriteByPage" resultType="capstone_project.ReadingForum_Backend.Model.Book">
-        select * from book where id in (select book_id from favourite where user_id=#{id}) and deleted=0 limit #{start},16
+        select id,name,book_cover,author,publisher from book where id in (select book_id from favourite where user_id=#{id}) and deleted=0 limit #{start},16
+    </select>
+
+    <select id="selectFavouriteNum" resultType="int">
+        select count(*) from favourite where user_id=#{id}
     </select>
 
     <insert id="insert">
