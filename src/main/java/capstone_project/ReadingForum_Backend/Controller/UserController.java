@@ -3,6 +3,7 @@ package capstone_project.ReadingForum_Backend.Controller;
 import capstone_project.ReadingForum_Backend.Model.Book;
 import capstone_project.ReadingForum_Backend.Model.User;
 import capstone_project.ReadingForum_Backend.Service.IBookService;
+import capstone_project.ReadingForum_Backend.Service.IFollowService;
 import capstone_project.ReadingForum_Backend.Service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,8 @@ public class UserController {
     private IUserService userService;
     @Autowired
     private IBookService bookService;
+    @Autowired
+    private IFollowService followService;
 
     @Value("${web.uploadPath}")
     private String baseUploadPath;
@@ -49,12 +52,34 @@ public class UserController {
         }
     }
 
+    @GetMapping("/userInfoById")
+    public Result getUserInfoById(@RequestParam("userId") int userId) {
+        try {
+            User user = userService.selectById(userId);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("获取用户信息成功！");
+            user.setId(0);
+            user.setPassword(null);
+            user.setBan(false);
+            user.setDeleted(false);
+            Map data = new HashMap<String, Object>();
+            data.put("userInfo", user);
+            result.setData(data);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("获取用户信息失败！");
+            return result;
+        }
+    }
+
     @GetMapping("/favouriteByPage")
-    public Result getFavouriteByPage(@RequestHeader("token") String token, @RequestParam int page) {
+    public Result getFavouriteByPage(@RequestHeader("token") String token, @RequestParam("page") int page) {
         try {
             String username = JWT.parseToken(token);
             int id = userService.selectByUsername(username).getId();
-            int start = (page - 1) * 16 + 1;
+            int start = (page - 1) * 16;
             List<Book> bookList = bookService.selectFavouriteByPage(id, start);
             int num = bookService.selectFavouriteNum(id);
             Result result = new Result();
@@ -72,6 +97,133 @@ public class UserController {
         }
     }
 
+    @GetMapping("/favouriteByPageId")
+    public Result getFavouriteByPageId(@RequestParam("id") int id, @RequestParam("page") int page) {
+        try {
+            int start = (page - 1) * 16;
+            List<Book> bookList = bookService.selectFavouriteByPage(id, start);
+            int num = bookService.selectFavouriteNum(id);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("获取用户收藏成功！");
+            Map data = new HashMap<String, Object>();
+            data.put("bookList", bookList);
+            data.put("num", num);
+            result.setData(data);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("获取用户收藏失败！");
+            return result;
+        }
+    }
+
+    @GetMapping("/followingByPage")
+    public Result getFollowingByPage(@RequestHeader("token") String token, @RequestParam("page") int page) {
+        try {
+            String username = JWT.parseToken(token);
+            int followerId = userService.selectByUsername(username).getId();
+            int start = (page - 1) * 10;
+            List<User> userList = userService.selectFollowingByPage(followerId, start);
+            int num = userService.selectFollowingNum(followerId);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("获取用户关注成功！");
+            Map data = new HashMap<String, Object>();
+            data.put("userList", userList);
+            data.put("num", num);
+            result.setData(data);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("获取用户关注失败！");
+            return result;
+        }
+    }
+
+    @GetMapping("/followingByPageId")
+    public Result getFollowingByPageId(@RequestParam("followerId") int followerId, @RequestParam("page") int page) {
+        try {
+            int start = (page - 1) * 10;
+            List<User> userList = userService.selectFollowingByPage(followerId, start);
+            int num = userService.selectFollowingNum(followerId);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("获取用户关注成功！");
+            Map data = new HashMap<String, Object>();
+            data.put("userList", userList);
+            data.put("num", num);
+            result.setData(data);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("获取用户关注失败！");
+            return result;
+        }
+    }
+
+    @GetMapping("/followerByPage")
+    public Result getFollowerByPage(@RequestHeader("token") String token, @RequestParam("page") int page) {
+        try {
+            String username = JWT.parseToken(token);
+            int followingId = userService.selectByUsername(username).getId();
+            int start = (page - 1) * 10;
+            List<User> userList = userService.selectFollowerByPage(followingId, start);
+            int num = userService.selectFollowerNum(followingId);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("获取用户关注成功！");
+            Map data = new HashMap<String, Object>();
+            data.put("userList", userList);
+            data.put("num", num);
+            result.setData(data);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("获取用户粉丝失败！");
+            return result;
+        }
+    }
+
+    @GetMapping("/followerByPageId")
+    public Result getFollowerByPageId(@RequestParam("followingId") int followingId, @RequestParam("page") int page) {
+        try {
+            int start = (page - 1) * 10;
+            List<User> userList = userService.selectFollowerByPage(followingId, start);
+            int num = userService.selectFollowerNum(followingId);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("获取用户关注成功！");
+            Map data = new HashMap<String, Object>();
+            data.put("userList", userList);
+            data.put("num", num);
+            result.setData(data);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("获取用户粉丝失败！");
+            return result;
+        }
+    }
+
+    @GetMapping("/isFollowed")
+    public Result isFollowed(@RequestHeader("token") String token, @RequestParam("followingId") int followingId) {
+        try {
+            String username = JWT.parseToken(token);
+            int followerId = userService.selectByUsername(username).getId();
+            List<Integer> followingList =  followService.selectFollowing(followerId);
+            Result result = new Result();
+            if (followingList.contains(followingId)) {
+                result.setCode(1);
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
     @PostMapping("/login")
     public Result login(@RequestBody Map<String, String> map) {
         try {
@@ -80,7 +232,6 @@ public class UserController {
             if (user != null && user.getPassword().equals(map.get("password")) && !user.isBan()) {
                 result.setCode(1);
                 result.setMessage("登录成功！");
-                user.setId(0);
                 user.setPassword(null);
                 user.setBan(false);
                 user.setDeleted(false);
@@ -157,8 +308,26 @@ public class UserController {
         }
     }
 
-    @DeleteMapping
-    public Result delete(@RequestHeader("token") String token) {
+    @PostMapping("/follow")
+    public Result follow(@RequestHeader("token") String token, @RequestBody Map<String, Integer> map) {
+        try {
+            String username = JWT.parseToken(token);
+            int followerId = userService.selectByUsername(username).getId();
+            int followingId = map.get("followingId");
+            followService.insert(followerId, followingId);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("关注成功！");
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @DeleteMapping("/deleteUser")
+    public Result deleteUser(@RequestHeader("token") String token) {
         try {
             String username = JWT.parseToken(token);
             User user = userService.selectByUsername(username);
@@ -171,6 +340,23 @@ public class UserController {
                 result.setCode(1);
                 result.setMessage("删除成功！");
             }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @DeleteMapping("deleteFollowing")
+    public Result deleteFollowing(@RequestHeader("token") String token, @RequestParam("followingId") int followingId) {
+        try {
+            String username = JWT.parseToken(token);
+            int followerId = userService.selectByUsername(username).getId();
+            followService.delete(followerId, followingId);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("取消关注成功！");
             return result;
         } catch (Exception e) {
             Result result = new Result();

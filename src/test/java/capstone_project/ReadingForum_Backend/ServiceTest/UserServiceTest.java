@@ -30,4 +30,11 @@ public class UserServiceTest {
         String password = "123456";
         userService.insert(username, password);
     }
+
+    @Test
+    public void selectFollowingByPage() throws IOException {
+        int followerId = 7;
+        int start = 0;
+        System.out.println(userService.selectFollowingByPage(followerId, start));
+    }
 }

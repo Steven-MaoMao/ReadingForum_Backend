@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="capstone_project.ReadingForum_Backend.Dao.BookRateDao">
+    <select id="selectRate" resultType="int">
+        select rate from book_rate where book_id=#{bookId} and user_id=#{userId}
+    </select>
+
+    <select id="selectFive" resultType="int">
+        select count(*) from book_rate where book_id=#{bookId} and rate=5
+    </select>
+
+    <select id="selectFour" resultType="int">
+        select count(*) from book_rate where book_id=#{bookId} and rate=4
+    </select>
+
+    <select id="selectThree" resultType="int">
+        select count(*) from book_rate where book_id=#{bookId} and rate=3
+    </select>
+
+    <select id="selectTwo" resultType="int">
+        select count(*) from book_rate where book_id=#{bookId} and rate=2
+    </select>
+
+    <select id="selectOne" resultType="int">
+        select count(*) from book_rate where book_id=#{bookId} and rate=1
+    </select>
+
+    <insert id="insert">
+        insert into book_rate (book_id, user_id, rate) values (#{bookId}, #{userId}, #{rate})
+    </insert>
+
+    <update id="update">
+        update book_rate set rate=#{rate} where book_id=#{bookId} and user_id=#{userId}
+    </update>
+</mapper>

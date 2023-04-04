@@ -9,6 +9,10 @@ public interface IUserService {
     List<User> selectAll() throws IOException;
     User selectById(int id) throws IOException;
     User selectByUsername(String username) throws IOException;
+    List<User> selectFollowingByPage(int followerId, int start) throws IOException;
+    int selectFollowingNum(int followerId) throws IOException;
+    List<User> selectFollowerByPage(int followingId, int start) throws IOException;
+    int selectFollowerNum(int followingId) throws IOException;
     boolean insert(String username, String password) throws IOException;
     boolean update(User user) throws IOException;
 }

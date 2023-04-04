@@ -10,6 +10,7 @@ public class Book {
     private String author = null;
     private String publisher = null;
     private String publishTime = null;
+    private String translator = null;
     private String ISBN = null;
     private String authorIntroduction = null;
     private String bookIntroduction = null;

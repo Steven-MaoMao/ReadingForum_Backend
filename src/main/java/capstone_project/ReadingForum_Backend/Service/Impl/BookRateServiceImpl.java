@@ -1,8 +1,7 @@
 package capstone_project.ReadingForum_Backend.Service.Impl;
 
-import capstone_project.ReadingForum_Backend.Dao.UserDao;
-import capstone_project.ReadingForum_Backend.Model.User;
-import capstone_project.ReadingForum_Backend.Service.IUserService;
+import capstone_project.ReadingForum_Backend.Dao.BookRateDao;
+import capstone_project.ReadingForum_Backend.Service.IBookRateService;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -11,109 +10,105 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 @Service
-public class UserServiceImpl implements IUserService {
-    public List<User> selectAll() throws IOException {
+public class BookRateServiceImpl implements IBookRateService {
+    @Override
+    public int selectRate(int bookId, int userId) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            UserDao mapper = session.getMapper(UserDao.class);
-            return mapper.selectAll();
+            BookRateDao mapper = session.getMapper(BookRateDao.class);
+            return mapper.selectRate(bookId, userId);
         }
     }
 
-    public User selectById(int id) throws IOException {
+    @Override
+    public int selectFive(int bookId) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            UserDao mapper = session.getMapper(UserDao.class);
-            return mapper.selectById(id);
+            BookRateDao mapper = session.getMapper(BookRateDao.class);
+            return mapper.selectFive(bookId);
         }
     }
 
-    public User selectByUsername(String username) throws IOException {
+    @Override
+    public int selectFour(int bookId) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            UserDao mapper = session.getMapper(UserDao.class);
-            return mapper.selectByUsername(username);
+            BookRateDao mapper = session.getMapper(BookRateDao.class);
+            return mapper.selectFour(bookId);
         }
     }
 
-    public List<User> selectFollowingByPage(int followerId, int start) throws IOException {
+    @Override
+    public int selectThree(int bookId) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            UserDao mapper = session.getMapper(UserDao.class);
-            return mapper.selectFollowingByPage(followerId, start);
+            BookRateDao mapper = session.getMapper(BookRateDao.class);
+            return mapper.selectThree(bookId);
         }
     }
 
-    public int selectFollowingNum(int followerId) throws IOException {
+    @Override
+    public int selectTwo(int bookId) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            UserDao mapper = session.getMapper(UserDao.class);
-            return mapper.selectFollowingNum(followerId);
+            BookRateDao mapper = session.getMapper(BookRateDao.class);
+            return mapper.selectTwo(bookId);
         }
     }
 
-    public List<User> selectFollowerByPage(int followingId, int start) throws IOException {
+    @Override
+    public int selectOne(int bookId) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            UserDao mapper = session.getMapper(UserDao.class);
-            return mapper.selectFollowerByPage(followingId, start);
+            BookRateDao mapper = session.getMapper(BookRateDao.class);
+            return mapper.selectOne(bookId);
         }
     }
 
-    public int selectFollowerNum(int followingId) throws IOException {
+    @Override
+    public boolean insert(int bookId, int userId, int rate) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            UserDao mapper = session.getMapper(UserDao.class);
-            return mapper.selectFollowerNum(followingId);
-        }
-    }
-
-    public boolean insert(String username, String password) throws IOException {
-        String resource = "mybatis-config.xml";
-        InputStream inputStream = Resources.getResourceAsStream(resource);
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            UserDao mapper = session.getMapper(UserDao.class);
-            mapper.insert(username, password);
+            BookRateDao mapper = session.getMapper(BookRateDao.class);
+            mapper.insert(bookId, userId, rate);
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    public boolean update(User user) throws IOException {
+    @Override
+    public boolean update(int bookId, int userId, int rate) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            UserDao mapper = session.getMapper(UserDao.class);
-            mapper.update(user);
+            BookRateDao mapper = session.getMapper(BookRateDao.class);
+            mapper.update(bookId, userId, rate);
             return true;
         } catch (Exception e) {
             return false;

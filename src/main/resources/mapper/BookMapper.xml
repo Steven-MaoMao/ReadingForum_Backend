@@ -8,7 +8,7 @@
     </select>
 
     <select id="selectById" resultType="capstone_project.ReadingForum_Backend.Model.Book">
-        select * from book where id=#{id} where deleted=0
+        select * from book where id=#{id} and deleted=0
     </select>
 
     <select id="selectByNamePublisher" resultType="capstone_project.ReadingForum_Backend.Model.Book">

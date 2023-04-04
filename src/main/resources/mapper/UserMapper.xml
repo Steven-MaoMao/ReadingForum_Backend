@@ -15,6 +15,22 @@
         select * from user where username=#{username} and deleted=0
     </select>
 
+    <select id="selectFollowingByPage" resultType="capstone_project.ReadingForum_Backend.Model.User">
+        select id,username,nickname,avatar from user where id in (select following_id from follow where follower_id=#{followerId}) and deleted=0 limit #{start},10
+    </select>
+
+    <select id="selectFollowingNum" resultType="int">
+        select count(*) from follow where follower_id=#{followerId}
+    </select>
+
+    <select id="selectFollowerByPage" resultType="capstone_project.ReadingForum_Backend.Model.User">
+        select id,username,nickname,avatar from user where id in (select follower_id from follow where following_id=#{followingId}) and deleted=0 limit #{start},10
+    </select>
+
+    <select id="selectFollowerNum" resultType="int">
+        select count(*) from follow where following_id=#{followingId}
+    </select>
+
     <insert id="insert">
         insert into user (username, password) values (#{username}, #{password})
     </insert>
