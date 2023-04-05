@@ -13,6 +13,8 @@ public interface IUserService {
     int selectFollowingNum(int followerId) throws IOException;
     List<User> selectFollowerByPage(int followingId, int start) throws IOException;
     int selectFollowerNum(int followingId) throws IOException;
+    List<User> searchUser(String keyword, int start) throws IOException;
+    int searchUserNum(String keyword) throws IOException;
     boolean insert(String username, String password) throws IOException;
     boolean update(User user) throws IOException;
 }

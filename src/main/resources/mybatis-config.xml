@@ -23,5 +23,7 @@
         <mapper resource="mapper/BookMapper.xml"/>
         <mapper resource="mapper/FollowMapper.xml"/>
         <mapper resource="mapper/BookRateMapper.xml"/>
+        <mapper resource="mapper/BookCommentMapper.xml"/>
+        <mapper resource="mapper/FavouriteMapper.xml"/>
     </mappers>
 </configuration>

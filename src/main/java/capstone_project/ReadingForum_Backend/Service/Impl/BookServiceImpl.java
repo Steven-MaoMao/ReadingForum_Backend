@@ -70,6 +70,39 @@ public class BookServiceImpl implements IBookService {
         }
     }
 
+    public List<Book> selectTopTen() throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            BookDao mapper = session.getMapper(BookDao.class);
+            return mapper.selectTopTen();
+        }
+    }
+
+    public List<Book> searchBook(String keyword, int start) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            BookDao mapper = session.getMapper(BookDao.class);
+            return mapper.searchBook(keyword, start);
+        }
+    }
+
+    public int searchBookNum(String keyword) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            BookDao mapper = session.getMapper(BookDao.class);
+            return mapper.searchBookNum(keyword);
+        }
+    }
+
     public boolean insert(Book book) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);

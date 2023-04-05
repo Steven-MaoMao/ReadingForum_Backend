@@ -92,6 +92,28 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
+    public List<User> searchUser(String keyword, int start) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            UserDao mapper = session.getMapper(UserDao.class);
+            return mapper.searchUser(keyword, start);
+        }
+    }
+
+    public int searchUserNum(String keyword) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            UserDao mapper = session.getMapper(UserDao.class);
+            return mapper.searchUserNum(keyword);
+        }
+    }
+
     public boolean insert(String username, String password) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);

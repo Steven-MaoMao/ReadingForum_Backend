@@ -31,6 +31,14 @@
         select count(*) from follow where following_id=#{followingId}
     </select>
 
+    <select id="searchUser" resultType="capstone_project.ReadingForum_Backend.Model.User">
+        select id,username,nickname,avatar from user where username like #{keyword} or nickname like #{keyword} and ban=0 and deleted=0 limit #{start},10
+    </select>
+
+    <select id="searchUserNum" resultType="int">
+        select count(*) from user where username like #{keyword} or nickname like #{keyword} and ban=0 and deleted=0
+    </select>
+
     <insert id="insert">
         insert into user (username, password) values (#{username}, #{password})
     </insert>

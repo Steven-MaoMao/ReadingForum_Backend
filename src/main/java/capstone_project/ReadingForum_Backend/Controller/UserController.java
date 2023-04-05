@@ -3,6 +3,7 @@ package capstone_project.ReadingForum_Backend.Controller;
 import capstone_project.ReadingForum_Backend.Model.Book;
 import capstone_project.ReadingForum_Backend.Model.User;
 import capstone_project.ReadingForum_Backend.Service.IBookService;
+import capstone_project.ReadingForum_Backend.Service.IFavouriteService;
 import capstone_project.ReadingForum_Backend.Service.IFollowService;
 import capstone_project.ReadingForum_Backend.Service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class UserController {
     private IBookService bookService;
     @Autowired
     private IFollowService followService;
+    @Autowired
+    private IFavouriteService favouriteService;
 
     @Value("${web.uploadPath}")
     private String baseUploadPath;
@@ -70,6 +73,52 @@ public class UserController {
         } catch (Exception e) {
             Result result = new Result();
             result.setMessage("获取用户信息失败！");
+            return result;
+        }
+    }
+
+    @GetMapping("/searchUser")
+    public Result searchUser(@RequestParam("keyword") String keyword, @RequestParam("page") int page) {
+        try {
+            int start = (page - 1) * 10;
+            keyword = "%" + keyword + "%";
+            List<User> userList = userService.searchUser(keyword, start);
+            int totalUser = userService.searchUserNum(keyword);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("搜索成功！");
+            Map map = new HashMap<String, Object>();
+            map.put("userList", userList);
+            map.put("totalUser", totalUser);
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @GetMapping("/num")
+    public Result getNum(@RequestHeader("token") String token) {
+        try {
+            String username = JWT.parseToken(token);
+            int userId = userService.selectByUsername(username).getId();
+            int favouriteNum = bookService.selectFavouriteNum(userId);
+            int followingNum = userService.selectFollowingNum(userId);
+            int followerNum = userService.selectFollowerNum(userId);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("成功！");
+            Map map = new HashMap<String, Integer>();
+            map.put("favouriteNum", favouriteNum);
+            map.put("followingNum", followingNum);
+            map.put("followerNum", followerNum);
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
             return result;
         }
     }

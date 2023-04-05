@@ -8,8 +8,11 @@ public interface BookDao {
     List<Book> selectAll();
     Book selectById(int id);
     Book selectByNamePublisher(String name, String publisher);
-    List<Book> selectFavouriteByPage(int id, int start);
     int selectFavouriteNum(int id);
+    List<Book> selectFavouriteByPage(int id, int start);
+    List<Book> selectTopTen();
+    List<Book> searchBook(String keyword, int start);
+    int searchBookNum(String keyword);
     void insert(Book book);
     void update(Book book);
 }

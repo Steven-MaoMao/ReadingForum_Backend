@@ -1,5 +1,6 @@
 package capstone_project.ReadingForum_Backend.ServiceTest;
 
+import capstone_project.ReadingForum_Backend.Service.IBookCommentService;
 import capstone_project.ReadingForum_Backend.Service.IBookRateService;
 import capstone_project.ReadingForum_Backend.Service.IBookService;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,8 @@ public class BookServiceTest {
     private IBookService bookService;
     @Autowired
     private IBookRateService bookRateService;
+    @Autowired
+    private IBookCommentService bookCommentService;
 
     @Test
     public void selectFavouriteByPageTest() throws IOException {
@@ -33,5 +36,15 @@ public class BookServiceTest {
     @Test
     public void selectMyRate() throws IOException {
         System.out.println(bookRateService.selectRate(1, 7));
+    }
+
+    @Test
+    public void selectCommentByPageTest() throws IOException {
+        System.out.println(bookCommentService.selectCommentByPage(1, 0));
+    }
+
+    @Test
+    public void searchBookTest() throws IOException {
+        System.out.println(bookService.searchBook("01", 0));
     }
 }

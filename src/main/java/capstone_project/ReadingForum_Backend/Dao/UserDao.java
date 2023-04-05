@@ -12,6 +12,8 @@ public interface UserDao {
     int selectFollowingNum(int followerId);
     List<User> selectFollowerByPage(int followingId, int start);
     int selectFollowerNum(int followingId);
+    List<User> searchUser(String keyword, int start);
+    int searchUserNum(String keyword);
     void insert(String username, String password);
     void update(User user);
 }

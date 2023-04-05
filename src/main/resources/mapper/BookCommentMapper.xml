@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="capstone_project.ReadingForum_Backend.Dao.BookCommentDao">
+    <select id="selectCommentByPage" resultType="capstone_project.ReadingForum_Backend.Model.BookComment">
+        select a.book_id,a.user_id,a.comment,a.time,b.id,b.username,b.nickname,b.avatar from book_comment as a LEFT JOIN user as b on a.user_id=b.id where a.book_id=#{bookId} order by a.id desc limit #{start},10
+    </select>
+
+    <select id="selectCommentNum" resultType="int">
+        select count(*) from book_comment where book_id=#{bookId}
+    </select>
+
+    <insert id="insert">
+        insert into book_comment (book_id,user_id,comment,time) values (#{bookId},#{userId},#{comment},now())
+    </insert>
+</mapper>

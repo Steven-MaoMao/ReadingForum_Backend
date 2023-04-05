@@ -15,4 +15,5 @@ public class Book {
     private String authorIntroduction = null;
     private String bookIntroduction = null;
     private boolean deleted = false;
+    private int stars = -1;
 }

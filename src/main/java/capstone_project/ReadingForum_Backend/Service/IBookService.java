@@ -11,6 +11,9 @@ public interface IBookService {
     Book selectByNamePublisher(String name, String publisher) throws IOException;
     List<Book> selectFavouriteByPage(int id, int start) throws IOException;
     int selectFavouriteNum(int id) throws IOException;
+    List<Book> selectTopTen() throws IOException;
+    List<Book> searchBook(String keyword, int start) throws IOException;
+    int searchBookNum(String keyword) throws IOException;
     boolean insert(Book book) throws IOException;
     boolean update(Book book) throws IOException;
 }
