@@ -2,13 +2,10 @@ package capstone_project.ReadingForum_Backend.Controller;
 
 import capstone_project.ReadingForum_Backend.Model.Book;
 import capstone_project.ReadingForum_Backend.Model.BookComment;
-import capstone_project.ReadingForum_Backend.Model.User;
 import capstone_project.ReadingForum_Backend.Service.*;
-import javafx.collections.ObservableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,11 +23,14 @@ public class BookController {
     private IBookCommentService bookCommentService;
     @Autowired
     private IFavouriteService favouriteService;
+    @Autowired
+    private ITagService tagService;
 
     @GetMapping("/bookInfoById")
     public Result getBookInfoById(@RequestParam("id") int id) {
         try {
             Book book = bookService.selectById(id);
+            book.setTags(tagService.selectByBook(id));
             Result result = new Result();
             result.setCode(1);
             result.setMessage("获取书籍信息成功！");
@@ -45,10 +45,54 @@ public class BookController {
         }
     }
 
-    @GetMapping("/topTen")
-    public Result getTopTen() {
+    @GetMapping("/topTenBook")
+    public Result getTopTenBook() {
         try {
             List<Book> bookList = bookService.selectTopTen();
+            for (int i=0; i<bookList.size(); i++) {
+                int id = bookList.get(i).getId();
+                bookList.get(i).setTags(tagService.selectByBook(id));
+            }
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("成功！");
+            Map map = new HashMap<String, Object>();
+            map.put("bookList", bookList);
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @GetMapping("/topFiveTag")
+    public Result selectTopFiveTag() {
+        try {
+            List<Map> tagList = tagService.selectTopFive();
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("成功！");
+            Map map = new HashMap<String, Object>();
+            map.put("tagList", tagList);
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @GetMapping("/latestFiveBook")
+    public Result selectLatestFiveBook() {
+        try {
+            List<Book> bookList = bookService.selectLatestFive();
+            for (int i=0; i<bookList.size(); i++) {
+                int id = bookList.get(i).getId();
+                bookList.get(i).setTags(tagService.selectByBook(id));
+            }
             Result result = new Result();
             result.setCode(1);
             result.setMessage("成功！");
@@ -69,6 +113,10 @@ public class BookController {
             int start = (page - 1) * 16;
             keyword = "%" + keyword + "%";
             List<Book> bookList = bookService.searchBook(keyword, start);
+            for (int i=0; i<bookList.size(); i++) {
+                int id = bookList.get(i).getId();
+                bookList.get(i).setTags(tagService.selectByBook(id));
+            }
             int totalBook = bookService.searchBookNum(keyword);
             Result result = new Result();
             result.setCode(1);

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="capstone_project.ReadingForum_Backend.Dao.TagDao">
+    <select id="selectAll" resultType="Map">
+        select * from tag
+    </select>
+
+    <select id="selectByBook" resultType="Map">
+        select * from tag where id in (select tag_id from book_tag where book_id=#{bookId})
+    </select>
+
+    <select id="selectTopFive" resultType="Map">
+        select a.id,a.name,count(b.tag_id) as stars from tag as a left join book_tag as b on a.id=b.tag_id group by a.id order by stars desc limit 5
+    </select>
+
+    <select id="orderTopTenFavouriteTagById" resultType="Map">
+        select a.id,a.name,count(b.tag_id) as stars from (select * from tag where id in (select tag_id from book_tag where book_id in (select id from book where id in (select book_id from favourite where user_id=#{userId})))) as a left join book_tag as b on a.id=b.tag_id group by a.id order by stars desc limit 10
+    </select>
+</mapper>

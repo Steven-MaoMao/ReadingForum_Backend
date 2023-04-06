@@ -2,6 +2,9 @@ package capstone_project.ReadingForum_Backend.Model;
 
 import lombok.Data;
 
+import java.util.List;
+import java.util.Map;
+
 @Data
 public class Book {
     private int id = 0;
@@ -16,4 +19,5 @@ public class Book {
     private String bookIntroduction = null;
     private boolean deleted = false;
     private int stars = -1;
+    private List<Map> tags = null;
 }

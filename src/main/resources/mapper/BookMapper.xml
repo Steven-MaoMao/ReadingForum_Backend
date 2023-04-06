@@ -27,6 +27,14 @@
         select book.id,book.name,book.book_cover,book.author,book.publisher,count(favourite.user_id) as stars from book left join favourite on book.id=favourite.book_id group by book.id order by stars desc limit 10
     </select>
 
+    <select id="selectLatestFive" resultType="capstone_project.ReadingForum_Backend.Model.Book">
+        select * from book where deleted=0 order by id desc limit 5
+    </select>
+
+    <select id="selectTopFiveByTag" resultType="capstone_project.ReadingForum_Backend.Model.Book">
+        select b.id,b.name,b.book_cover,b.author,b.publisher,count(favourite.user_id) as stars from (select * from book as a where a.id in (select book_id from book_tag where tag_id=#{tagId})) as b left join favourite on b.id=favourite.book_id group by b.id order by stars desc limit 5
+    </select>
+
     <select id="searchBook" resultType="capstone_project.ReadingForum_Backend.Model.Book">
         select id,name,book_cover,author,publisher from book where name like #{keyword} or author like #{keyword} or publisher like #{keyword} or ISBN like #{keyword} and deleted=0 limit #{start},16
     </select>

@@ -2,10 +2,7 @@ package capstone_project.ReadingForum_Backend.Controller;
 
 import capstone_project.ReadingForum_Backend.Model.Book;
 import capstone_project.ReadingForum_Backend.Model.User;
-import capstone_project.ReadingForum_Backend.Service.IBookService;
-import capstone_project.ReadingForum_Backend.Service.IFavouriteService;
-import capstone_project.ReadingForum_Backend.Service.IFollowService;
-import capstone_project.ReadingForum_Backend.Service.IUserService;
+import capstone_project.ReadingForum_Backend.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +24,7 @@ public class UserController {
     @Autowired
     private IFollowService followService;
     @Autowired
-    private IFavouriteService favouriteService;
+    private ITagService tagService;
 
     @Value("${web.uploadPath}")
     private String baseUploadPath;
@@ -130,6 +127,10 @@ public class UserController {
             int id = userService.selectByUsername(username).getId();
             int start = (page - 1) * 16;
             List<Book> bookList = bookService.selectFavouriteByPage(id, start);
+            for (int i=0; i<bookList.size(); i++) {
+                int bookId = bookList.get(i).getId();
+                bookList.get(i).setTags(tagService.selectByBook(bookId));
+            }
             int num = bookService.selectFavouriteNum(id);
             Result result = new Result();
             result.setCode(1);
@@ -151,6 +152,10 @@ public class UserController {
         try {
             int start = (page - 1) * 16;
             List<Book> bookList = bookService.selectFavouriteByPage(id, start);
+            for (int i=0; i<bookList.size(); i++) {
+                int bookId = bookList.get(i).getId();
+                bookList.get(i).setTags(tagService.selectByBook(bookId));
+            }
             int num = bookService.selectFavouriteNum(id);
             Result result = new Result();
             result.setCode(1);
