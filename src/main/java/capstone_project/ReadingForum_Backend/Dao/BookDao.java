@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface BookDao {
     List<Book> selectAll();
+    List<Book> selectAllByPage(int start);
+    int selectAllNumByPage();
     Book selectById(int id);
     Book selectByNamePublisher(String name, String publisher);
     int selectFavouriteNum(int id);
@@ -13,6 +15,8 @@ public interface BookDao {
     List<Book> selectTopTen();
     List<Book> selectLatestFive();
     List<Book> selectTopFiveByTag(int tagId);
+    List<Book> selectBookByTagPage(int tagId, int start);
+    int selectBookNumByTagPage(int tagId);
     List<Book> searchBook(String keyword, int start);
     int searchBookNum(String keyword);
     void insert(Book book);

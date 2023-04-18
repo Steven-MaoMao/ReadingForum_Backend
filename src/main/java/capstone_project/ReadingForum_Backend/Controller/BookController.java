@@ -67,6 +67,56 @@ public class BookController {
         }
     }
 
+    @GetMapping("/bookByTagPage")
+    public Result selectBookByTagPage(@RequestParam("tagId") int tagId, @RequestParam("page") int page) {
+        try {
+            int start = (page - 1) * 16;
+            List<Book> bookList;
+            int totalBook;
+            if(tagId == 0) {
+                bookList = bookService.selectAllByPage(start);
+                totalBook = bookService.selectAllNumByPage();
+            } else {
+                bookList = bookService.selectBookByTagPage(tagId, start);
+                totalBook = bookService.selectBookNumByTagPage(tagId);
+            }
+            for (int i=0; i<bookList.size(); i++) {
+                int id = bookList.get(i).getId();
+                bookList.get(i).setTags(tagService.selectByBook(id));
+            }
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("成功！");
+            Map map = new HashMap<String, Object>();
+            map.put("bookList", bookList);
+            map.put("totalBook", totalBook);
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @GetMapping("/allTag")
+    public Result selectAllTag() {
+        try {
+            List<Map> tagList = tagService.selectAll();
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("成功！");
+            Map map = new HashMap<String, Object>();
+            map.put("tagList", tagList);
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
     @GetMapping("/topFiveTag")
     public Result selectTopFiveTag() {
         try {

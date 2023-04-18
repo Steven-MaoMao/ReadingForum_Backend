@@ -26,6 +26,28 @@ public class BookServiceImpl implements IBookService {
         }
     }
 
+    public List<Book> selectAllByPage(int start) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            BookDao mapper = session.getMapper(BookDao.class);
+            return mapper.selectAllByPage(start);
+        }
+    }
+
+    public int selectAllNumByPage() throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            BookDao mapper = session.getMapper(BookDao.class);
+            return mapper.selectAllNumByPage();
+        }
+    }
+
     public Book selectById(int id) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
@@ -100,6 +122,28 @@ public class BookServiceImpl implements IBookService {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             BookDao mapper = session.getMapper(BookDao.class);
             return mapper.selectTopFiveByTag(tagId);
+        }
+    }
+
+    public List<Book> selectBookByTagPage(int tagId, int start) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            BookDao mapper = session.getMapper(BookDao.class);
+            return mapper.selectBookByTagPage(tagId, start);
+        }
+    }
+
+    public int selectBookNumByTagPage(int tagId) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            BookDao mapper = session.getMapper(BookDao.class);
+            return mapper.selectBookNumByTagPage(tagId);
         }
     }
 

@@ -7,6 +7,14 @@
         select * from book where deleted=0
     </select>
 
+    <select id="selectAllByPage" resultType="capstone_project.ReadingForum_Backend.Model.Book">
+        select id,name,book_cover,author,publisher from book where deleted=0 limit #{start},16
+    </select>
+
+    <select id="selectAllNumByPage" resultType="int">
+        select count(*) from book where deleted=0
+    </select>
+
     <select id="selectById" resultType="capstone_project.ReadingForum_Backend.Model.Book">
         select * from book where id=#{id} and deleted=0
     </select>
@@ -33,6 +41,14 @@
 
     <select id="selectTopFiveByTag" resultType="capstone_project.ReadingForum_Backend.Model.Book">
         select b.id,b.name,b.book_cover,b.author,b.publisher,count(favourite.user_id) as stars from (select * from book as a where a.id in (select book_id from book_tag where tag_id=#{tagId})) as b left join favourite on b.id=favourite.book_id group by b.id order by stars desc limit 5
+    </select>
+
+    <select id="selectBookByTagPage" resultType="capstone_project.ReadingForum_Backend.Model.Book">
+        select id,name,book_cover,author,publisher from book where id in (select book_id from book_tag where tag_id=#{tagId}) and deleted=0 limit #{start},16
+    </select>
+
+    <select id="selectBookNumByTagPage" resultType="int">
+        select count(*) from book where id in (select book_id from book_tag where tag_id=#{tagId}) and deleted=0
     </select>
 
     <select id="searchBook" resultType="capstone_project.ReadingForum_Backend.Model.Book">

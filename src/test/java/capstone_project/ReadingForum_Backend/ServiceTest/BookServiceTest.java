@@ -65,4 +65,8 @@ public class BookServiceTest {
     public void recommendTest() throws IOException {
         System.out.println(bookService.selectTopFiveByTag(1));
     }
+    @Test
+    public void selectBookByTagPageTest() throws IOException {
+        System.out.println(bookService.selectBookByTagPage(2, 0));
+    }
 }
