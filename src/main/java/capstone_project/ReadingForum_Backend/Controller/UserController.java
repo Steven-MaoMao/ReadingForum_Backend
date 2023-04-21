@@ -338,7 +338,7 @@ public class UserController {
             String[] splitFilename = newAvatar.getOriginalFilename().split("\\.");
             String ext = "." + splitFilename[splitFilename.length - 1];
             String uuid = UUID.randomUUID().toString();
-            String newAvatarName = baseUploadPath + "avatar/" + uuid + ext;
+            String newAvatarName = baseUploadPath + "Avatar/" + uuid + ext;
             newAvatar.transferTo(new File(newAvatarName));
             if (user.getAvatar() != null) {
                 File oldAvatar = new File(baseUploadPath + user.getAvatar().substring(10));
@@ -346,7 +346,7 @@ public class UserController {
                     oldAvatar.delete();
                 }
             }
-            String avatarPath = "/resources/avatar/" + uuid + ext;
+            String avatarPath = "/resources/Avatar/" + uuid + ext;
             user.setAvatar(avatarPath);
             userService.update(user);
             result.setCode(1);

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="capstone_project.ReadingForum_Backend.Dao.GroupDao">
+    <select id="selectAll" resultType="capstone_project.ReadingForum_Backend.Model.Group">
+        select * from `group`
+    </select>
+
+    <select id="selectAllByPage" resultType="capstone_project.ReadingForum_Backend.Model.Group">
+        select * from `group` limit #{start},10
+    </select>
+
+    <select id="selectAllNum" resultType="int">
+        select count(*) from `group`
+    </select>
+
+    <select id="selectById" resultType="capstone_project.ReadingForum_Backend.Model.Group">
+        select * from `group` where id=#{id}
+    </select>
+
+    <select id="searchGroup" resultType="capstone_project.ReadingForum_Backend.Model.Group">
+        select * from `group` where name like #{keyword} or create_user like #{keyword} limit #{start},10
+    </select>
+
+    <select id="searchGroupNum" resultType="int">
+        select count(*) from `group` where name like #{keyword} or create_user like #{keyword}
+    </select>
+
+    <insert id="insert">
+        insert into `group` (name, create_user, create_time) values (#{name}, #{createUser}, CURDATE())
+    </insert>
+
+    <update id="update">
+        update `group` set avatar=#{avatar}, introduction=#{introduction} where id=#{id}
+    </update>
+</mapper>

@@ -1,9 +1,6 @@
 package capstone_project.ReadingForum_Backend.ServiceTest;
 
-import capstone_project.ReadingForum_Backend.Service.IBookCommentService;
-import capstone_project.ReadingForum_Backend.Service.IBookRateService;
-import capstone_project.ReadingForum_Backend.Service.IBookService;
-import capstone_project.ReadingForum_Backend.Service.ITagService;
+import capstone_project.ReadingForum_Backend.Service.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +17,8 @@ public class BookServiceTest {
     private IBookCommentService bookCommentService;
     @Autowired
     private ITagService tagService;
+    @Autowired
+    private IGroupService groupService;
 
     @Test
     public void selectFavouriteByPageTest() throws IOException {
@@ -68,5 +67,10 @@ public class BookServiceTest {
     @Test
     public void selectBookByTagPageTest() throws IOException {
         System.out.println(bookService.selectBookByTagPage(2, 0));
+    }
+
+    @Test
+    public void selectAllByPageTest() throws IOException {
+        System.out.println(groupService.selectAllByPage(1));
     }
 }

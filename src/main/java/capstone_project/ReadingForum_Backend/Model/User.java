@@ -15,6 +15,8 @@ public class User {
     private String email = null;
     private String location = null;
     private String bio = null;
+    private int groupId = 0;
+    private boolean groupManager = false;
     private boolean ban = false;
     private boolean deleted = false;
 }
