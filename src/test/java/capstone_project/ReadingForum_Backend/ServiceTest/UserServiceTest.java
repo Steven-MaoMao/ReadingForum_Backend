@@ -37,4 +37,9 @@ public class UserServiceTest {
         int start = 0;
         System.out.println(userService.selectFollowingByPage(followerId, start));
     }
+
+    @Test
+    public void selectGroupMemberTest() throws IOException {
+        System.out.println(userService.selectGroupMember(3));
+    }
 }

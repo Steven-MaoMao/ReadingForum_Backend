@@ -464,4 +464,45 @@ public class UserController {
             return result;
         }
     }
+
+    @PutMapping("/joinGroup")
+    public Result joinGroup(@RequestHeader("token") String token, @RequestParam("groupId") int groupId) {
+        try {
+            String username = JWT.parseToken(token);
+            int id = userService.selectByUsername(username).getId();
+            Result result = new Result();
+            if (userService.joinGroup(groupId, id)) {
+                result.setCode(1);
+                result.setMessage("加入成功！");
+            } else {
+                result.setMessage("加入失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PutMapping("/quitGroup")
+    public Result quitGroup(@RequestHeader("token") String token) {
+        try {
+            String username = JWT.parseToken(token);
+            User user = userService.selectByUsername(username);
+            int id = user.getId();
+            Result result = new Result();
+            if (userService.quitGroup(id)) {
+                result.setCode(1);
+                result.setMessage("退出成功！");
+            } else {
+                result.setMessage("退出失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
 }

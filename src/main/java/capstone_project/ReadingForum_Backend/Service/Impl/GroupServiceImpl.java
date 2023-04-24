@@ -64,6 +64,18 @@ public class GroupServiceImpl implements IGroupService {
     }
 
     @Override
+    public Group selectByCreateUser(int userId) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            GroupDao mapper = session.getMapper(GroupDao.class);
+            return mapper.selectByCreateUser(userId);
+        }
+    }
+
+    @Override
     public List<Group> searchGroup(String keyword, int start) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
@@ -84,6 +96,18 @@ public class GroupServiceImpl implements IGroupService {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             GroupDao mapper = session.getMapper(GroupDao.class);
             return mapper.searchGroupNum(keyword);
+        }
+    }
+
+    @Override
+    public List<Group> selectTopFiveGroup() throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            GroupDao mapper = session.getMapper(GroupDao.class);
+            return mapper.selectTopFiveGroup();
         }
     }
 
@@ -111,6 +135,21 @@ public class GroupServiceImpl implements IGroupService {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             GroupDao mapper = session.getMapper(GroupDao.class);
             mapper.update(group);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delete(int groupId) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            GroupDao mapper = session.getMapper(GroupDao.class);
+            mapper.delete(groupId);
             return true;
         } catch (Exception e) {
             return false;

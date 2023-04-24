@@ -19,12 +19,20 @@
         select * from `group` where id=#{id}
     </select>
 
+    <select id="selectByCreateUser" resultType="capstone_project.ReadingForum_Backend.Model.Group">
+        select * from `group` where create_user=#{userId}
+    </select>
+
     <select id="searchGroup" resultType="capstone_project.ReadingForum_Backend.Model.Group">
-        select * from `group` where name like #{keyword} or create_user like #{keyword} limit #{start},10
+        select * from `group` where name like #{keyword} limit #{start},10
     </select>
 
     <select id="searchGroupNum" resultType="int">
         select count(*) from `group` where name like #{keyword} or create_user like #{keyword}
+    </select>
+
+    <select id="selectTopFiveGroup" resultType="capstone_project.ReadingForum_Backend.Model.Group">
+        select * from `group` where id in (select group_id from user where group_id>0 GROUP BY group_id ORDER BY count(*) desc) LIMIT 0,5
     </select>
 
     <insert id="insert">
@@ -34,4 +42,8 @@
     <update id="update">
         update `group` set avatar=#{avatar}, introduction=#{introduction} where id=#{id}
     </update>
+
+    <delete id="delete">
+        delete from `group` where id=#{groupId}
+    </delete>
 </mapper>

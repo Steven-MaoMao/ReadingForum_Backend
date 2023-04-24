@@ -31,6 +31,15 @@ public class RecommendController {
             String username = JWT.parseToken(token);
             User user = userService.selectByUsername(username);
             List<Map> topTenFavouriteTag = tagService.orderTopTenFavouriteTagById(user.getId());
+            if (topTenFavouriteTag.size() == 0) {
+                Result result = new Result();
+                result.setCode(1);
+                result.setMessage("成功！");
+                Map map = new HashMap<String, Object>();
+                map.put("bookList", null);
+                result.setData(map);
+                return result;
+            }
             List<Book> bookList = bookService.selectTopFiveByTag(Integer.parseInt(topTenFavouriteTag.get(0).get("id").toString()));
             for (int i=0; i<bookList.size(); i++) {
                 int id = bookList.get(i).getId();

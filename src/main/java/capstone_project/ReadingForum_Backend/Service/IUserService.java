@@ -15,6 +15,10 @@ public interface IUserService {
     int selectFollowerNum(int followingId) throws IOException;
     List<User> searchUser(String keyword, int start) throws IOException;
     int searchUserNum(String keyword) throws IOException;
+    List<User> selectGroupMember(int groupId) throws IOException;
     boolean insert(String username, String password) throws IOException;
     boolean update(User user) throws IOException;
+    boolean joinGroup(int groupId, int id) throws IOException;
+    boolean setGroupManager(int id) throws IOException;
+    boolean quitGroup(int id) throws IOException;
 }

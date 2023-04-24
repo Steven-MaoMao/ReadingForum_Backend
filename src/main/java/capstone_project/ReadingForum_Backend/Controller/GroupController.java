@@ -104,6 +104,55 @@ public class GroupController {
         }
     }
 
+    @GetMapping("/topFiveGroup")
+    public Result getTopFiveGroup() {
+        try {
+            List<Group> groupList = groupService.selectTopFiveGroup();
+            for (int i=0;i<groupList.size();i++) {
+                User user = userService.selectById(groupList.get(i).getCreateUser());
+                groupList.get(i).setUsername(user.getUsername());
+                groupList.get(i).setNickname(user.getNickname());
+                groupList.get(i).setUserAvatar(user.getAvatar());
+            }
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("获取TopFiveGroup成功！");
+            Map map = new HashMap<String, Object>();
+            map.put("groupList", groupList);
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PostMapping("/createGroup")
+    public Result createGroup(@RequestHeader("token") String token, @RequestBody Map map) {
+        try {
+            String username = JWT.parseToken(token);
+            User user = userService.selectByUsername(username);
+            int id = user.getId();
+            String name = map.get("name").toString();
+            groupService.insert(name, id);
+            int groupId = groupService.selectByCreateUser(id).getId();
+            userService.joinGroup(groupId, id);
+            userService.setGroupManager(id);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("创建成功！");
+            Map data = new HashMap<String, Object>();
+            data.put("groupId", groupId);
+            result.setData(data);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("创建失败！");
+            return result;
+        }
+    }
+
     @PostMapping("/uploadAvatar")
     public Result uploadAvatar(@RequestHeader("token") String token, @RequestParam("file") MultipartFile newAvatar) {
         try {
@@ -143,6 +192,55 @@ public class GroupController {
         } catch (Exception e) {
             Result result = new Result();
             result.setMessage("上传失败！");
+            return result;
+        }
+    }
+
+    @PutMapping("/uploadGroup")
+    public Result uploadGroup(@RequestBody Group group) {
+        try {
+            Result result = new Result();
+            if (groupService.update(group)) {
+                result.setCode(1);
+                result.setMessage("修改成功！");
+            } else {
+                result.setMessage("修改失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @DeleteMapping("/dissolveGroup")
+    public Result dissolveGroup(@RequestHeader("token") String token) {
+        try {
+            String username = JWT.parseToken(token);
+            int groupId = userService.selectByUsername(username).getGroupId();
+            Group group = groupService.selectById(groupId);
+            List<User> userList = userService.selectGroupMember(groupId);
+            for (int i=0; i<userList.size(); i++) {
+                userService.quitGroup(userList.get(i).getId());
+            }
+            if (group.getAvatar() != null) {
+                File oldAvatar = new File(baseUploadPath + group.getAvatar().substring(10));
+                if (oldAvatar.exists()) {
+                    oldAvatar.delete();
+                }
+            }
+            Result result = new Result();
+            if (groupService.delete(groupId)) {
+                result.setCode(1);
+                result.setMessage("解散成功！");
+            } else {
+                result.setMessage("解散失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
             return result;
         }
     }

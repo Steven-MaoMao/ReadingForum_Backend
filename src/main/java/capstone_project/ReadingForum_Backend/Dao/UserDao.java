@@ -14,6 +14,10 @@ public interface UserDao {
     int selectFollowerNum(int followingId);
     List<User> searchUser(String keyword, int start);
     int searchUserNum(String keyword);
+    List<User> selectGroupMember(int groupId);
     void insert(String username, String password);
     void update(User user);
+    void joinGroup(int groupId, int id);
+    void setGroupManager(int id);
+    void quitGroup(int id);
 }
