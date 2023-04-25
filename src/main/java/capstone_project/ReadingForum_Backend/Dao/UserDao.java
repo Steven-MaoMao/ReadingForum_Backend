@@ -19,5 +19,6 @@ public interface UserDao {
     void update(User user);
     void joinGroup(int groupId, int id);
     void setGroupManager(int id);
+    void dismissGroupManager(int id);
     void quitGroup(int id);
 }

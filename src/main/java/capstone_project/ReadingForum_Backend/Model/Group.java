@@ -10,6 +10,7 @@ public class Group {
     private int createUser = 0;
     private String createTime = null;
     private String introduction = null;
+    private String notice = null;
     private String username = null;
     private String nickname = null;
     private String userAvatar = null;

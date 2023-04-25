@@ -40,7 +40,7 @@
     </insert>
 
     <update id="update">
-        update `group` set avatar=#{avatar}, introduction=#{introduction} where id=#{id}
+        update `group` set avatar=#{avatar}, introduction=#{introduction}, notice=#{notice} where id=#{id}
     </update>
 
     <delete id="delete">

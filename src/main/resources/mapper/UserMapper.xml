@@ -59,6 +59,10 @@
         update user set group_manager=1 where id=#{id} and group_id>0
     </update>
 
+    <update id="dismissGroupManager">
+        update user set group_manager=0 where id=#{id} and group_id>0
+    </update>
+
     <update id="quitGroup">
         update user set group_id=0, group_manager=0 where id=#{id}
     </update>

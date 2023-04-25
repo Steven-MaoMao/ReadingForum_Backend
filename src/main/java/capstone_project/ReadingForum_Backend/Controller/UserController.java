@@ -278,6 +278,27 @@ public class UserController {
         }
     }
 
+    @GetMapping("/groupMember")
+    public Result getGroupMember(@RequestHeader("token") String token) {
+        try {
+            String username = JWT.parseToken(token);
+            User user = userService.selectByUsername(username);
+            int groupId = user.getGroupId();
+            List<User> userList = userService.selectGroupMember(groupId);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("成功！");
+            Map map = new HashMap<String, Object>();
+            map.put("userList", userList);
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
     @PostMapping("/login")
     public Result login(@RequestBody Map<String, String> map) {
         try {
@@ -476,6 +497,42 @@ public class UserController {
                 result.setMessage("加入成功！");
             } else {
                 result.setMessage("加入失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PutMapping("/setGroupManager")
+    public Result setGroupManager(@RequestParam("userId") int userId) {
+        try {
+            Result result = new Result();
+            if (userService.setGroupManager(userId)) {
+                result.setCode(1);
+                result.setMessage("设置成功！");
+            } else {
+                result.setMessage("设置失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PutMapping("/dismissGroupManager")
+    public Result dismissGroupManager(@RequestParam("userId") int userId) {
+        try {
+            Result result = new Result();
+            if (userService.dismissGroupManager(userId)) {
+                result.setCode(1);
+                result.setMessage("设置成功！");
+            } else {
+                result.setMessage("设置失败！");
             }
             return result;
         } catch (Exception e) {

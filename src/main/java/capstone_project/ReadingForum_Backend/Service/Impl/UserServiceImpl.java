@@ -182,6 +182,21 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
+    @Override
+    public boolean dismissGroupManager(int id) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            UserDao mapper = session.getMapper(UserDao.class);
+            mapper.dismissGroupManager(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean quitGroup(int id) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
