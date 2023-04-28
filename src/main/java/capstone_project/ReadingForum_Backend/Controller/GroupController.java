@@ -1,9 +1,10 @@
 package capstone_project.ReadingForum_Backend.Controller;
 
+import capstone_project.ReadingForum_Backend.Model.Book;
+import capstone_project.ReadingForum_Backend.Model.BookComment;
 import capstone_project.ReadingForum_Backend.Model.Group;
 import capstone_project.ReadingForum_Backend.Model.User;
-import capstone_project.ReadingForum_Backend.Service.IGroupService;
-import capstone_project.ReadingForum_Backend.Service.IUserService;
+import capstone_project.ReadingForum_Backend.Service.*;
 import javafx.collections.ObservableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +24,12 @@ public class GroupController {
     private IGroupService groupService;
     @Autowired
     private IUserService userService;
+    @Autowired
+    private IBookService bookService;
+    @Autowired
+    private ITagService tagService;
+    @Autowired
+    private IGroupFavouriteService groupFavouriteService;
 
     @Value("${web.uploadPath}")
     private String baseUploadPath;
@@ -128,6 +135,47 @@ public class GroupController {
         }
     }
 
+    @GetMapping("/groupFavouriteByIdPage")
+    public Result getGroupFavouriteByIdPage(@RequestParam("groupId") int id, @RequestParam("page") int page) {
+        try {
+            int start = (page - 1) * 16;
+            List<Book> bookList = bookService.selectGroupFavouriteByPage(id, start);
+            for (int i=0; i<bookList.size(); i++) {
+                int bookId = bookList.get(i).getId();
+                bookList.get(i).setTags(tagService.selectByBook(bookId));
+            }
+            int num = bookService.selectGroupFavouriteNum(id);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("获取社团收藏成功！");
+            Map data = new HashMap<String, Object>();
+            data.put("bookList", bookList);
+            data.put("num", num);
+            result.setData(data);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @GetMapping("/isGroupFavourite")
+    public Result isGroupFavourite(@RequestParam("bookId") int bookId, @RequestParam("groupId") int groupId) {
+        try {
+            List<Integer> groupFavouriteList = groupFavouriteService.selectGroupFavourite(groupId);
+            Result result = new Result();
+            if (groupFavouriteList.contains(bookId)) {
+                result.setCode(1);
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
     @PostMapping("/createGroup")
     public Result createGroup(@RequestHeader("token") String token, @RequestBody Map map) {
         try {
@@ -196,6 +244,24 @@ public class GroupController {
         }
     }
 
+    @PostMapping("groupFavourite")
+    public Result insertGroupFavourite(@RequestParam("groupId") int groupId, @RequestParam("bookId") int bookId) {
+        try {
+            Result result = new Result();
+            if (groupFavouriteService.insert(groupId, bookId)) {
+                result.setCode(1);
+                result.setMessage("收藏成功！");
+            } else {
+                result.setMessage("收藏失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
     @PutMapping("/uploadGroup")
     public Result uploadGroup(@RequestBody Group group) {
         try {
@@ -236,6 +302,24 @@ public class GroupController {
                 result.setMessage("解散成功！");
             } else {
                 result.setMessage("解散失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @DeleteMapping("deleteGroupFavourite")
+    public Result deleteGroupFavourite(@RequestParam("groupId") int groupId, @RequestParam("bookId") int bookId) {
+        try {
+            Result result = new Result();
+            if (groupFavouriteService.delete(groupId, bookId)) {
+                result.setCode(1);
+                result.setMessage("取消收藏成功！");
+            } else {
+                result.setMessage("取消收藏失败！");
             }
             return result;
         } catch (Exception e) {

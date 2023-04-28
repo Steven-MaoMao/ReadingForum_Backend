@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="capstone_project.ReadingForum_Backend.Dao.GroupFavouriteDao">
+    <select id="selectGroupFavourite" resultType="int">
+        select book_id from group_favourite where group_id=#{userId}
+    </select>
+
+    <insert id="insert">
+        insert into group_favourite (group_id, book_id) values (#{groupId}, #{bookId})
+    </insert>
+
+    <delete id="delete">
+        delete from group_favourite where group_id=#{groupId} and book_id=#{bookId}
+    </delete>
+</mapper>

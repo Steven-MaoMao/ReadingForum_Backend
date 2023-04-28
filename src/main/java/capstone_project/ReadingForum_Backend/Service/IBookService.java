@@ -13,6 +13,8 @@ public interface IBookService {
     Book selectByNamePublisher(String name, String publisher) throws IOException;
     List<Book> selectFavouriteByPage(int id, int start) throws IOException;
     int selectFavouriteNum(int id) throws IOException;
+    List<Book> selectGroupFavouriteByPage(int id, int start) throws IOException;
+    int selectGroupFavouriteNum(int id) throws IOException;
     List<Book> selectTopTen() throws IOException;
     List<Book> selectLatestFive() throws IOException;
     List<Book> selectTopFiveByTag(int tagId) throws IOException;
