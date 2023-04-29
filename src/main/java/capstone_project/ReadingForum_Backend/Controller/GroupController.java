@@ -1,11 +1,9 @@
 package capstone_project.ReadingForum_Backend.Controller;
 
 import capstone_project.ReadingForum_Backend.Model.Book;
-import capstone_project.ReadingForum_Backend.Model.BookComment;
 import capstone_project.ReadingForum_Backend.Model.Group;
 import capstone_project.ReadingForum_Backend.Model.User;
 import capstone_project.ReadingForum_Backend.Service.*;
-import javafx.collections.ObservableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;

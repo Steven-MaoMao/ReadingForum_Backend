@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="capstone_project.ReadingForum_Backend.Dao.SubgroupMemberDao">
+    <insert id="insert">
+        insert into subgroup_member (user_id, subgroup_id) values (#{userId}, #{subgroupId})
+    </insert>
+
+    <delete id="delete">
+        delete from subgroup_member where id=#{subgroupMemberId}
+    </delete>
+</mapper>

@@ -125,6 +125,18 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
+    @Override
+    public List<User> selectSubgroupMember(int subgroupId) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            UserDao mapper = session.getMapper(UserDao.class);
+            return mapper.selectSubgroupMember(subgroupId);
+        }
+    }
+
     public boolean insert(String username, String password) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);

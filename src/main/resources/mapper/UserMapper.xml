@@ -43,6 +43,10 @@
         select id,username,nickname,avatar,group_manager from user where group_id=#{groupId}
     </select>
 
+    <select id="selectSubgroupMember" resultType="capstone_project.ReadingForum_Backend.Model.User">
+        select id,username,nickname,avatar from user where id in (select user_id from subgroup_member where subgroup_id=#{subgroupId})
+    </select>
+
     <insert id="insert">
         insert into user (username, password) values (#{username}, #{password})
     </insert>

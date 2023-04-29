@@ -16,6 +16,7 @@ public interface IUserService {
     List<User> searchUser(String keyword, int start) throws IOException;
     int searchUserNum(String keyword) throws IOException;
     List<User> selectGroupMember(int groupId) throws IOException;
+    List<User> selectSubgroupMember(int subgroupId) throws IOException;
     boolean insert(String username, String password) throws IOException;
     boolean update(User user) throws IOException;
     boolean joinGroup(int groupId, int id) throws IOException;

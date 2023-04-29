@@ -28,5 +28,7 @@
         <mapper resource="mapper/TagMapper.xml"/>
         <mapper resource="mapper/GroupMapper.xml"/>
         <mapper resource="mapper/GroupFavouriteMapper.xml"/>
+        <mapper resource="mapper/SubgroupMapper.xml"/>
+        <mapper resource="mapper/SubgroupMemberMapper.xml"/>
     </mappers>
 </configuration>
