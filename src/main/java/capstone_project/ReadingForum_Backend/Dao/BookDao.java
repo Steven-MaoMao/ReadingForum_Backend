@@ -14,6 +14,7 @@ public interface BookDao {
     List<Book> selectFavouriteByPage(int id, int start);
     List<Book> selectGroupFavouriteByPage(int id, int start);
     int selectGroupFavouriteNum(int id);
+    List<Book> selectGroupFavouriteTopTen(int groupId);
     List<Book> selectTopTen();
     List<Book> selectLatestFive();
     List<Book> selectTopFiveByTag(int tagId);

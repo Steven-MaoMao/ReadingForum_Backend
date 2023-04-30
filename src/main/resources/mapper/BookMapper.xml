@@ -39,6 +39,10 @@
         select count(*) from group_favourite where group_id=#{id}
     </select>
 
+    <select id="selectGroupFavouriteTopTen" resultType="capstone_project.ReadingForum_Backend.Model.Book">
+        select book.id,book.name,book.book_cover,book.author,book.publisher,count(favourite.user_id) as stars from (select * from book where id in (select book_id from group_favourite where group_id=#{groupId}) and deleted=0) as book left join favourite on book.id=favourite.book_id group by book.id order by stars desc limit 10
+    </select>
+
     <select id="selectTopTen" resultType="capstone_project.ReadingForum_Backend.Model.Book">
         select book.id,book.name,book.book_cover,book.author,book.publisher,count(favourite.user_id) as stars from book left join favourite on book.id=favourite.book_id group by book.id order by stars desc limit 10
     </select>

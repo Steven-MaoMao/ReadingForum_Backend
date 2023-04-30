@@ -1,5 +1,6 @@
 package capstone_project.ReadingForum_Backend.DaoTests;
 
+import capstone_project.ReadingForum_Backend.Dao.SubgroupDao;
 import capstone_project.ReadingForum_Backend.Dao.UserDao;
 import capstone_project.ReadingForum_Backend.Model.User;
 import org.apache.ibatis.io.Resources;
@@ -86,6 +87,18 @@ public class UserDaoTest {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             UserDao mapper = session.getMapper(UserDao.class);
             mapper.update(user);
+        }
+    }
+
+    @Test
+    public void insertSubgroupTest() throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            SubgroupDao mapper = session.getMapper(SubgroupDao.class);
+            mapper.insert("111");
         }
     }
 }

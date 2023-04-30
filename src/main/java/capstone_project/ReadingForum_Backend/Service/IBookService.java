@@ -15,6 +15,7 @@ public interface IBookService {
     int selectFavouriteNum(int id) throws IOException;
     List<Book> selectGroupFavouriteByPage(int id, int start) throws IOException;
     int selectGroupFavouriteNum(int id) throws IOException;
+    List<Book> selectGroupFavouriteTopTen(int groupId) throws IOException;
     List<Book> selectTopTen() throws IOException;
     List<Book> selectLatestFive() throws IOException;
     List<Book> selectTopFiveByTag(int tagId) throws IOException;

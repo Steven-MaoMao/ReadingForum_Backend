@@ -8,7 +8,7 @@ import java.util.List;
 public interface ISubgroupService {
     Subgroup selectByName(String subgroupName) throws IOException;
     List<Subgroup> selectByGroupId(int groupId) throws IOException;
-    boolean insert(String subgroupName) throws IOException;
+    boolean insert(String subgroupName, int groupId) throws IOException;
     boolean update(int subgroupId, String subgroupName) throws IOException;
     boolean delete(int subgroupId) throws IOException;
 }

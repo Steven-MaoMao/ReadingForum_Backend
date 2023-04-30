@@ -12,7 +12,7 @@
     </select>
 
     <insert id="insert">
-        insert into subgroup (name, time) values (#{subgroupName}, CURDATE())
+        insert into subgroup (name, time, group_id) values (#{subgroupName}, CURDATE(), #{groupId})
     </insert>
 
     <update id="update">
