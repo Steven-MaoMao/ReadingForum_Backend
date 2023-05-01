@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="capstone_project.ReadingForum_Backend.Dao.SubgroupModuleDao">
+    <select id="selectBySubgroupId" resultType="capstone_project.ReadingForum_Backend.Model.Module">
+        select subgroup_module.module_id as id, module.name as name from subgroup_module LEFT JOIN module on subgroup_module.module_id=module.id where subgroup_id=#{subgroup_id}
+    </select>
+
+    <select id="selectAllModule" resultType="capstone_project.ReadingForum_Backend.Model.Module">
+        select * from module
+    </select>
+
+    <insert id="insert">
+        insert into subgroup_module (subgroup_id, module_id) values (#{subgroupId}, #{moduleId})
+    </insert>
+
+    <delete id="delete">
+        delete from subgroup_module where subgroup_id=#{subgroupId} and module_id=#{moduleId}
+    </delete>
+</mapper>

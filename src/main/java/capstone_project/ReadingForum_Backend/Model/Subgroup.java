@@ -11,4 +11,5 @@ public class Subgroup {
     private String time = null;
     private int groupId = 0;
     private List<User> subgroupMember = null;
+    private List<Module> moduleList = null;
 }

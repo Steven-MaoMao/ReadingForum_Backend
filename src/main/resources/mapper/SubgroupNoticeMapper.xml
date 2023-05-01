@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="capstone_project.ReadingForum_Backend.Dao.SubgroupNoticeDao">
+    <select id="selectBySubgroupId" resultType="capstone_project.ReadingForum_Backend.Model.SubgroupNotice">
+        select * from subgroup_notice where subgroup_id=#{subgroupId}
+    </select>
+
+    <insert id="insert">
+        insert into subgroup_notice (title, text, user_id, time, subgroup_id) values (#{title}, #{text}, #{userId}, CURDATE(), #{subgroupId})
+    </insert>
+
+    <update id="update">
+        update subgroup_notice set title=#{title}, text=#{text} where id=#{id}
+    </update>
+
+    <delete id="delete">
+        delete from subgroup_notice where id=#{id}
+    </delete>
+</mapper>
