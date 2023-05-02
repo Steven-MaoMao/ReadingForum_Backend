@@ -48,6 +48,6 @@ public class UserServiceTest {
 
     @Test
     public void insertSubgroupTest() throws IOException {
-        System.out.println(subgroupService.insert("111"));
+        System.out.println(subgroupService.insert("111", 1));
     }
 }

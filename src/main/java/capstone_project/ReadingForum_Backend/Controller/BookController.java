@@ -26,6 +26,24 @@ public class BookController {
     @Autowired
     private ITagService tagService;
 
+    @GetMapping("/allBook")
+    public Result getAllBook() {
+        try {
+            List<Book> bookList = bookService.selectAll();
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("获取书籍信息成功！");
+            Map data = new HashMap<String, Object>();
+            data.put("bookList", bookList);
+            result.setData(data);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
     @GetMapping("/bookInfoById")
     public Result getBookInfoById(@RequestParam("id") int id) {
         try {

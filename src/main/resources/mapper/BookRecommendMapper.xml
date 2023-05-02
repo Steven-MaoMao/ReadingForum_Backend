@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="capstone_project.ReadingForum_Backend.Dao.BookRecommendDao">
+    <select id="selectBySubgroupId" resultType="capstone_project.ReadingForum_Backend.Model.BookRecommend">
+        select * from book_recommend where subgroup_id=#{subgroupId}
+    </select>
+    
+    <insert id="insert">
+        insert into book_recommend (book_id, recommend_reason, user_id, time, subgroup_id) values (#{bookId}, #{recommendReason}, #{userId}, CURDATE(), #{subgroupId})
+    </insert>
+    
+    <update id="update">
+        update book_recommend set recommend_reason=#{recommendReason} where id=#{bookRecommendId}
+    </update>
+    
+    <delete id="delete">
+        delete from book_recommend where id=#{bookRecommendId}
+    </delete>
+</mapper>

@@ -1,7 +1,9 @@
 package capstone_project.ReadingForum_Backend.DaoTests;
 
+import capstone_project.ReadingForum_Backend.Dao.BookRecommendDao;
 import capstone_project.ReadingForum_Backend.Dao.SubgroupDao;
 import capstone_project.ReadingForum_Backend.Dao.UserDao;
+import capstone_project.ReadingForum_Backend.Model.BookRecommend;
 import capstone_project.ReadingForum_Backend.Model.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -98,7 +100,19 @@ public class UserDaoTest {
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             SubgroupDao mapper = session.getMapper(SubgroupDao.class);
-            mapper.insert("111");
+            mapper.insert("111", 1);
+        }
+    }
+
+    @Test
+    public void insertBookRecommendTest() throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            BookRecommendDao mapper = session.getMapper(BookRecommendDao.class);
+            mapper.insert(1, "test", 9, 1);
         }
     }
 }

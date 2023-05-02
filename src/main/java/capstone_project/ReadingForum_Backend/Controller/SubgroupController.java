@@ -1,9 +1,6 @@
 package capstone_project.ReadingForum_Backend.Controller;
 
-import capstone_project.ReadingForum_Backend.Model.Module;
-import capstone_project.ReadingForum_Backend.Model.Subgroup;
-import capstone_project.ReadingForum_Backend.Model.SubgroupNotice;
-import capstone_project.ReadingForum_Backend.Model.User;
+import capstone_project.ReadingForum_Backend.Model.*;
 import capstone_project.ReadingForum_Backend.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +23,12 @@ public class SubgroupController {
     private ISubgroupModuleService subgroupModuleService;
     @Autowired
     private ISubgroupNoticeService subgroupNoticeService;
+    @Autowired
+    private IBookRecommendService bookRecommendService;
+    @Autowired
+    private IBookService bookService;
+    @Autowired
+    private ITagService tagService;
 
     @GetMapping("/getSubgroup")
     public Result getSubgroup(@RequestHeader("token") String token, @RequestParam("groupId") int groupId) {
@@ -76,6 +79,30 @@ public class SubgroupController {
             result.setMessage("获取小组公告成功！");
             Map<String, Object> map = new HashMap<>();
             map.put("subgroupNoticeList", subgroupNoticeList);
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @GetMapping("/getBookRecommend")
+    public Result getBookRecommend(@RequestParam("subgroupId") int subgroupId) {
+        try {
+            List<BookRecommend> bookRecommendList = bookRecommendService.selectBySubgroupId(subgroupId);
+            for (int i=0;i<bookRecommendList.size();i++) {
+                bookRecommendList.get(i).setUser(userService.selectById(bookRecommendList.get(i).getUserId()));
+                Book book = bookService.selectById(bookRecommendList.get(i).getBookId());
+                book.setTags(tagService.selectByBook(book.getId()));
+                bookRecommendList.get(i).setBook(book);
+            }
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("获取书籍推荐成功！");
+            Map<String, Object> map = new HashMap<>();
+            map.put("bookRecommendList", bookRecommendList);
             result.setData(map);
             return result;
         } catch (Exception e) {
@@ -140,7 +167,7 @@ public class SubgroupController {
         }
     }
 
-    @PostMapping("addSubgroupModule")
+    @PostMapping("/addSubgroupModule")
     public Result addSubgroupModule(@RequestParam("subgroupId") int subgroupId, @RequestParam("moduleId") int moduleId) {
         try {
             Result result = new Result();
@@ -158,7 +185,25 @@ public class SubgroupController {
         }
     }
 
-    @PutMapping("updateSubgroupName")
+    @PostMapping("/addBookRecommend")
+    public Result addBookRecommend(@RequestBody Map<String, String> map) {
+        try {
+            Result result = new Result();
+            if (bookRecommendService.insert(Integer.parseInt(map.get("bookId")), map.get("recommendReason"), Integer.parseInt(map.get("userId")), Integer.parseInt(map.get("subgroupId")))) {
+                result.setCode(1);
+                result.setMessage("添加成功！");
+            } else {
+                result.setMessage("添加失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PutMapping("/updateSubgroupName")
     public Result updateSubgroupName(@RequestParam("id") int id, @RequestParam("name") String name) {
         try {
             Result result = new Result();
@@ -194,7 +239,25 @@ public class SubgroupController {
         }
     }
 
-    @DeleteMapping("deleteSubgroup")
+    @PutMapping("/updateBookRecommendReason")
+    public Result updateBookRecommendReason(@RequestBody Map<String, String> map) {
+        try {
+            Result result = new Result();
+            if (bookRecommendService.update(Integer.parseInt(map.get("bookRecommendId")), map.get("recommendReason"))) {
+                result.setCode(1);
+                result.setMessage("修改成功！");
+            } else {
+                result.setMessage("修改失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @DeleteMapping("/deleteSubgroup")
     public Result deleteSubgroup(@RequestParam("id") int id) {
         try {
             Result result = new Result();
@@ -212,7 +275,7 @@ public class SubgroupController {
         }
     }
 
-    @DeleteMapping("deleteSubgroupNotice")
+    @DeleteMapping("/deleteSubgroupNotice")
     public Result deleteSubgroupNotice(@RequestParam("id") int id) {
         try {
             Result result = new Result();
@@ -230,11 +293,29 @@ public class SubgroupController {
         }
     }
 
-    @DeleteMapping("deleteSubgroupModule")
+    @DeleteMapping("/deleteSubgroupModule")
     public Result deleteSubgroupModule(@RequestParam("subgroupId") int subgroupId, @RequestParam("moduleId") int moduleId) {
         try {
             Result result = new Result();
             if (subgroupModuleService.delete(subgroupId, moduleId)) {
+                result.setCode(1);
+                result.setMessage("删除成功！");
+            } else {
+                result.setMessage("删除失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @DeleteMapping("/deleteBookRecommend")
+    public Result deleteBookRecommend(@RequestParam("id") int id) {
+        try {
+            Result result = new Result();
+            if (bookRecommendService.delete(id)) {
                 result.setCode(1);
                 result.setMessage("删除成功！");
             } else {
