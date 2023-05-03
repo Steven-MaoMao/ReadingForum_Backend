@@ -14,7 +14,7 @@ public class Book {
     private String publisher = null;
     private String publishTime = null;
     private String translator = null;
-    private String ISBN = null;
+    private String isbn = null;
     private String authorIntroduction = null;
     private String bookIntroduction = null;
     private boolean deleted = false;
