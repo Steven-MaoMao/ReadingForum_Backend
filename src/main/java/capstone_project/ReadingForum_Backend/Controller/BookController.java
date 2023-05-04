@@ -2,13 +2,18 @@ package capstone_project.ReadingForum_Backend.Controller;
 
 import capstone_project.ReadingForum_Backend.Model.Book;
 import capstone_project.ReadingForum_Backend.Model.BookComment;
+import capstone_project.ReadingForum_Backend.Model.User;
 import capstone_project.ReadingForum_Backend.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/book")
@@ -25,6 +30,9 @@ public class BookController {
     private IFavouriteService favouriteService;
     @Autowired
     private ITagService tagService;
+
+    @Value("${web.uploadPath}")
+    private String baseUploadPath;
 
     @GetMapping("/allBook")
     public Result getAllBook() {
@@ -49,6 +57,7 @@ public class BookController {
         try {
             Book book = bookService.selectById(id);
             book.setTags(tagService.selectByBook(id));
+            book.setUser(userService.selectById(book.getUploadUser()));
             Result result = new Result();
             result.setCode(1);
             result.setMessage("获取书籍信息成功！");
@@ -275,6 +284,55 @@ public class BookController {
         } catch (Exception e) {
             Result result = new Result();
             result.setMessage("获取书籍评论失败！");
+            return result;
+        }
+    }
+
+    @PostMapping("/uploadBookCover")
+    public Result uploadBookCover(@RequestParam("file") MultipartFile newBookCover) {
+        try {
+            Result result = new Result();
+            if (newBookCover.isEmpty()) {
+                result.setMessage("文件为空，上传失败！");
+                return result;
+            }
+            String[] splitFilename = newBookCover.getOriginalFilename().split("\\.");
+            String ext = "." + splitFilename[splitFilename.length - 1];
+            String uuid = UUID.randomUUID().toString();
+            String newAvatarName = baseUploadPath + "BookCover/" + uuid + ext;
+            newBookCover.transferTo(new File(newAvatarName));
+            String bookCoverPath = "/resources/BookCover/" + uuid + ext;
+            result.setCode(1);
+            result.setMessage("上传成功！");
+            Map map = new HashMap<String, String>();
+            map.put("path", bookCoverPath);
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("上传失败！");
+            return result;
+        }
+    }
+
+    @PostMapping("/newBook")
+    public Result insertNewBook(@RequestHeader("token") String token, @RequestBody Book book) {
+        try {
+            String username = JWT.parseToken(token);
+            User user = userService.selectByUsername(username);
+            book.setUploadUser(user.getId());
+            Result result = new Result();
+            System.out.println(book);
+            if (bookService.insert(book)) {
+                result.setCode(1);
+                result.setMessage("上传成功！");
+            } else {
+                result.setMessage("上传失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
             return result;
         }
     }

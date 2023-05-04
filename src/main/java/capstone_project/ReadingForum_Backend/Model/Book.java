@@ -17,7 +17,9 @@ public class Book {
     private String isbn = null;
     private String authorIntroduction = null;
     private String bookIntroduction = null;
+    private int uploadUser = 0;
     private boolean deleted = false;
     private int stars = -1;
     private List<Map> tags = null;
+    private User user = null;
 }
