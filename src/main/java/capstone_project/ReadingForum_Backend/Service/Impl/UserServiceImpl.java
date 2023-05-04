@@ -165,61 +165,61 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
-    public boolean joinGroup(int groupId, int id) throws IOException {
-        String resource = "mybatis-config.xml";
-        InputStream inputStream = Resources.getResourceAsStream(resource);
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            UserDao mapper = session.getMapper(UserDao.class);
-            mapper.joinGroup(groupId, id);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean setGroupManager(int id) throws IOException {
-        String resource = "mybatis-config.xml";
-        InputStream inputStream = Resources.getResourceAsStream(resource);
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            UserDao mapper = session.getMapper(UserDao.class);
-            mapper.setGroupManager(id);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean dismissGroupManager(int id) throws IOException {
-        String resource = "mybatis-config.xml";
-        InputStream inputStream = Resources.getResourceAsStream(resource);
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            UserDao mapper = session.getMapper(UserDao.class);
-            mapper.dismissGroupManager(id);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean quitGroup(int id) throws IOException {
-        String resource = "mybatis-config.xml";
-        InputStream inputStream = Resources.getResourceAsStream(resource);
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            UserDao mapper = session.getMapper(UserDao.class);
-            mapper.quitGroup(id);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
+//    public boolean joinGroup(int groupId, int id) throws IOException {
+//        String resource = "mybatis-config.xml";
+//        InputStream inputStream = Resources.getResourceAsStream(resource);
+//        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+//
+//        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+//            UserDao mapper = session.getMapper(UserDao.class);
+//            mapper.joinGroup(groupId, id);
+//            return true;
+//        } catch (Exception e) {
+//            return false;
+//        }
+//    }
+//
+//    @Override
+//    public boolean setGroupManager(int id) throws IOException {
+//        String resource = "mybatis-config.xml";
+//        InputStream inputStream = Resources.getResourceAsStream(resource);
+//        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+//
+//        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+//            UserDao mapper = session.getMapper(UserDao.class);
+//            mapper.setGroupManager(id);
+//            return true;
+//        } catch (Exception e) {
+//            return false;
+//        }
+//    }
+//
+//    @Override
+//    public boolean dismissGroupManager(int id) throws IOException {
+//        String resource = "mybatis-config.xml";
+//        InputStream inputStream = Resources.getResourceAsStream(resource);
+//        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+//
+//        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+//            UserDao mapper = session.getMapper(UserDao.class);
+//            mapper.dismissGroupManager(id);
+//            return true;
+//        } catch (Exception e) {
+//            return false;
+//        }
+//    }
+//
+//    public boolean quitGroup(int id) throws IOException {
+//        String resource = "mybatis-config.xml";
+//        InputStream inputStream = Resources.getResourceAsStream(resource);
+//        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+//
+//        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+//            UserDao mapper = session.getMapper(UserDao.class);
+//            mapper.quitGroup(id);
+//            return true;
+//        } catch (Exception e) {
+//            return false;
+//        }
+//    }
 }

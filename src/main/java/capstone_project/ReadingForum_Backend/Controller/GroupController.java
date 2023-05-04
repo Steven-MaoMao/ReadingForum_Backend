@@ -2,6 +2,7 @@ package capstone_project.ReadingForum_Backend.Controller;
 
 import capstone_project.ReadingForum_Backend.Model.Book;
 import capstone_project.ReadingForum_Backend.Model.Group;
+import capstone_project.ReadingForum_Backend.Model.GroupMember;
 import capstone_project.ReadingForum_Backend.Model.User;
 import capstone_project.ReadingForum_Backend.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class GroupController {
     private ITagService tagService;
     @Autowired
     private IGroupFavouriteService groupFavouriteService;
+    @Autowired
+    private IGroupMemberService groupMemberService;
 
     @Value("${web.uploadPath}")
     private String baseUploadPath;
@@ -174,7 +177,7 @@ public class GroupController {
         }
     }
 
-    @GetMapping("topTenFavourite")
+    @GetMapping("/topTenFavourite")
     public Result getTopTenFavourite(@RequestParam("groupId") int groupId) {
         try {
             List<Book> bookList = bookService.selectGroupFavouriteTopTen(groupId);
@@ -196,6 +199,30 @@ public class GroupController {
         }
     }
 
+    @GetMapping("/groupMemberInfo")
+    public Result getGroupMemberInfo(@RequestHeader("token") String token, @RequestParam("groupId") int groupId) {
+        try {
+            String username = JWT.parseToken(token);
+            int id = userService.selectByUsername(username).getId();
+            GroupMember groupMember = groupMemberService.selectGroupMember(groupId, id);
+            Result result = new Result();
+            if (groupMember != null) {
+                result.setCode(1);
+                result.setMessage("成功！");
+                Map map = new HashMap<String, Object>();
+                map.put("groupMemberInfo", groupMember);
+                result.setData(map);
+            } else {
+                result.setMessage("失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
     @PostMapping("/createGroup")
     public Result createGroup(@RequestHeader("token") String token, @RequestBody Map map) {
         try {
@@ -205,8 +232,10 @@ public class GroupController {
             String name = map.get("name").toString();
             groupService.insert(name, id);
             int groupId = groupService.selectByCreateUser(id).getId();
-            userService.joinGroup(groupId, id);
-            userService.setGroupManager(id);
+//            userService.joinGroup(groupId, id);
+//            userService.setGroupManager(id);
+            groupMemberService.joinGroup(groupId, id);
+            groupMemberService.setGroupManager(groupId, id);
             Result result = new Result();
             result.setCode(1);
             result.setMessage("创建成功！");
@@ -222,16 +251,16 @@ public class GroupController {
     }
 
     @PostMapping("/uploadAvatar")
-    public Result uploadAvatar(@RequestHeader("token") String token, @RequestParam("file") MultipartFile newAvatar) {
+    public Result uploadAvatar(@RequestHeader("token") String token, @RequestParam("groupId") int groupId, @RequestParam("file") MultipartFile newAvatar) {
         try {
             String username = JWT.parseToken(token);
             User user = userService.selectByUsername(username);
             Result result = new Result();
-            if (!user.isGroupManager()) {
-                result.setMessage("你没有修改权限！");
-                return result;
-            }
-            int groupId = user.getGroupId();
+//            if (!user.isGroupManager()) {
+//                result.setMessage("你没有修改权限！");
+//                return result;
+//            }
+//            int groupId = user.getGroupId();
             Group group = groupService.selectById(groupId);
             if (newAvatar.isEmpty()) {
                 result.setMessage("文件为空，上传失败！");
@@ -301,14 +330,13 @@ public class GroupController {
     }
 
     @DeleteMapping("/dissolveGroup")
-    public Result dissolveGroup(@RequestHeader("token") String token) {
+    public Result dissolveGroup(@RequestHeader("token") String token, @RequestParam("groupId") int groupId) {
         try {
             String username = JWT.parseToken(token);
-            int groupId = userService.selectByUsername(username).getGroupId();
             Group group = groupService.selectById(groupId);
             List<User> userList = userService.selectGroupMember(groupId);
             for (int i=0; i<userList.size(); i++) {
-                userService.quitGroup(userList.get(i).getId());
+                groupMemberService.quitGroup(groupId, userList.get(i).getId());
             }
             if (group.getAvatar() != null) {
                 File oldAvatar = new File(baseUploadPath + group.getAvatar().substring(10));

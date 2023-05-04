@@ -19,8 +19,8 @@ public interface IUserService {
     List<User> selectSubgroupMember(int subgroupId) throws IOException;
     boolean insert(String username, String password) throws IOException;
     boolean update(User user) throws IOException;
-    boolean joinGroup(int groupId, int id) throws IOException;
-    boolean setGroupManager(int id) throws IOException;
-    boolean dismissGroupManager(int id) throws IOException;
-    boolean quitGroup(int id) throws IOException;
+//    boolean joinGroup(int groupId, int id) throws IOException;
+//    boolean setGroupManager(int id) throws IOException;
+//    boolean dismissGroupManager(int id) throws IOException;
+//    boolean quitGroup(int id) throws IOException;
 }

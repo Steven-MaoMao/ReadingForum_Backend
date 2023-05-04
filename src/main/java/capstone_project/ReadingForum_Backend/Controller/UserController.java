@@ -25,6 +25,8 @@ public class UserController {
     private IFollowService followService;
     @Autowired
     private ITagService tagService;
+    @Autowired
+    private IGroupMemberService groupMemberService;
 
     @Value("${web.uploadPath}")
     private String baseUploadPath;
@@ -279,11 +281,10 @@ public class UserController {
     }
 
     @GetMapping("/groupMember")
-    public Result getGroupMember(@RequestHeader("token") String token) {
+    public Result getGroupMember(@RequestHeader("token") String token, @RequestParam("groupId") int groupId) {
         try {
             String username = JWT.parseToken(token);
             User user = userService.selectByUsername(username);
-            int groupId = user.getGroupId();
             List<User> userList = userService.selectGroupMember(groupId);
             Result result = new Result();
             result.setCode(1);
@@ -492,7 +493,7 @@ public class UserController {
             String username = JWT.parseToken(token);
             int id = userService.selectByUsername(username).getId();
             Result result = new Result();
-            if (userService.joinGroup(groupId, id)) {
+            if (groupMemberService.joinGroup(groupId, id)) {
                 result.setCode(1);
                 result.setMessage("加入成功！");
             } else {
@@ -507,10 +508,10 @@ public class UserController {
     }
 
     @PutMapping("/setGroupManager")
-    public Result setGroupManager(@RequestParam("userId") int userId) {
+    public Result setGroupManager(@RequestParam("userId") int userId, @RequestParam("groupId") int groupId) {
         try {
             Result result = new Result();
-            if (userService.setGroupManager(userId)) {
+            if (groupMemberService.setGroupManager(groupId, userId)) {
                 result.setCode(1);
                 result.setMessage("设置成功！");
             } else {
@@ -525,10 +526,10 @@ public class UserController {
     }
 
     @PutMapping("/dismissGroupManager")
-    public Result dismissGroupManager(@RequestParam("userId") int userId) {
+    public Result dismissGroupManager(@RequestParam("userId") int userId, @RequestParam("groupId") int groupId) {
         try {
             Result result = new Result();
-            if (userService.dismissGroupManager(userId)) {
+            if (groupMemberService.dismissGroupManager(groupId, userId)) {
                 result.setCode(1);
                 result.setMessage("设置成功！");
             } else {
@@ -543,13 +544,13 @@ public class UserController {
     }
 
     @PutMapping("/quitGroup")
-    public Result quitGroup(@RequestHeader("token") String token) {
+    public Result quitGroup(@RequestHeader("token") String token, @RequestParam("groupId") int groupId) {
         try {
             String username = JWT.parseToken(token);
             User user = userService.selectByUsername(username);
             int id = user.getId();
             Result result = new Result();
-            if (userService.quitGroup(id)) {
+            if (groupMemberService.quitGroup(groupId, id)) {
                 result.setCode(1);
                 result.setMessage("退出成功！");
             } else {

@@ -18,8 +18,8 @@ public interface UserDao {
     List<User> selectSubgroupMember(int subgroupId);
     void insert(String username, String password);
     void update(User user);
-    void joinGroup(int groupId, int id);
-    void setGroupManager(int id);
-    void dismissGroupManager(int id);
-    void quitGroup(int id);
+//    void joinGroup(int groupId, int id);
+//    void setGroupManager(int id);
+//    void dismissGroupManager(int id);
+//    void quitGroup(int id);
 }

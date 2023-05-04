@@ -1,6 +1,7 @@
 package capstone_project.ReadingForum_Backend.ServiceTest;
 
 import capstone_project.ReadingForum_Backend.Model.User;
+import capstone_project.ReadingForum_Backend.Service.IGroupMemberService;
 import capstone_project.ReadingForum_Backend.Service.ISubgroupService;
 import capstone_project.ReadingForum_Backend.Service.IUserService;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,8 @@ public class UserServiceTest {
     private IUserService userService;
     @Autowired
     private ISubgroupService subgroupService;
+    @Autowired
+    private IGroupMemberService groupMemberService;
 
     @Test
     public void updateTest() throws IOException {
@@ -41,13 +44,18 @@ public class UserServiceTest {
         System.out.println(userService.selectFollowingByPage(followerId, start));
     }
 
-    @Test
-    public void selectGroupMemberTest() throws IOException {
-        System.out.println(userService.selectGroupMember(3));
-    }
+//    @Test
+//    public void selectGroupMemberTest() throws IOException {
+//        System.out.println(userService.selectGroupMember(3));
+//    }
 
     @Test
     public void insertSubgroupTest() throws IOException {
         System.out.println(subgroupService.insert("111", 1));
+    }
+
+    @Test
+    public void selectGroupMemberTest() throws IOException {
+        System.out.println(groupMemberService.selectGroupMember(16, 7));
     }
 }

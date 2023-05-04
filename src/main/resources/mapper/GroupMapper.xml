@@ -32,7 +32,7 @@
     </select>
 
     <select id="selectTopFiveGroup" resultType="capstone_project.ReadingForum_Backend.Model.Group">
-        select * from `group` where id in (select group_id from user where group_id>0 GROUP BY group_id ORDER BY count(*) desc) LIMIT 0,5
+        select * from `group` where id in (select group_id from group_member GROUP BY group_id ORDER BY count(*) desc) LIMIT 0,5
     </select>
 
     <insert id="insert">

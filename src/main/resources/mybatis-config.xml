@@ -33,5 +33,6 @@
         <mapper resource="mapper/SubgroupModuleMapper.xml"/>
         <mapper resource="mapper/SubgroupNoticeMapper.xml"/>
         <mapper resource="mapper/BookRecommendMapper.xml"/>
+        <mapper resource="mapper/GroupMemberMapper.xml"/>
     </mappers>
 </configuration>

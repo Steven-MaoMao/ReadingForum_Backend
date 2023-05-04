@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="capstone_project.ReadingForum_Backend.Dao.GroupMemberDao">
+    <select id="selectGroupMember" resultType="capstone_project.ReadingForum_Backend.Model.GroupMember">
+        select * from group_member where group_id=#{groupId} and user_id=#{userId}
+    </select>
+
+    <insert id="joinGroup">
+        insert into group_member (group_id, user_id) values (#{groupId}, #{userId})
+    </insert>
+
+    <update id="setGroupManager">
+        update group_member set manager=1 where group_id=#{groupId} and user_id=#{userId}
+    </update>
+
+    <update id="dismissGroupManager">
+        update group_member set manager=0 where group_id=#{groupId} and user_id=#{userId}
+    </update>
+
+    <delete id="quitGroup">
+        delete from group_member where group_id=#{groupId} and user_id=#{userId}
+    </delete>
+</mapper>
