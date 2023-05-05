@@ -15,6 +15,7 @@ public interface UserDao {
     List<User> searchUser(String keyword, int start);
     int searchUserNum(String keyword);
     List<User> selectGroupMember(int groupId);
+    List<User> selectGroupApplicant(int groupId);
     List<User> selectSubgroupMember(int subgroupId);
     void insert(String username, String password);
     void update(User user);

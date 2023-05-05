@@ -42,6 +42,21 @@ public class GroupMemberServiceImpl implements IGroupMemberService {
     }
 
     @Override
+    public boolean joinGroupPermit(int groupId, int userId) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            GroupMemberDao mapper = session.getMapper(GroupMemberDao.class);
+            mapper.joinGroupPermit(groupId, userId);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
     public boolean setGroupManager(int groupId, int userId) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);

@@ -40,7 +40,11 @@
     </select>
 
     <select id="selectGroupMember" resultType="capstone_project.ReadingForum_Backend.Model.User">
-        select id,username,nickname,avatar from user where id in (select user_id from group_member where group_id=#{groupId})
+        select id,username,nickname,avatar from user where id in (select user_id from group_member where group_id=#{groupId} and state=1)
+    </select>
+    
+    <select id="selectGroupApplicant" resultType="capstone_project.ReadingForum_Backend.Model.User">
+        select id,username,nickname,avatar from user where id in (select user_id from group_member where group_id=#{groupId} and state=0)
     </select>
 
     <select id="selectSubgroupMember" resultType="capstone_project.ReadingForum_Backend.Model.User">

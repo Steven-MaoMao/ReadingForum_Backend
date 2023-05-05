@@ -300,6 +300,26 @@ public class UserController {
         }
     }
 
+    @GetMapping("/groupApplicant")
+    public Result getGroupApplicant(@RequestHeader("token") String token, @RequestParam("groupId") int groupId) {
+        try {
+            String username = JWT.parseToken(token);
+            User user = userService.selectByUsername(username);
+            List<User> userList = userService.selectGroupApplicant(groupId);
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("成功！");
+            Map map = new HashMap<String, Object>();
+            map.put("userList", userList);
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
     @PostMapping("/login")
     public Result login(@RequestBody Map<String, String> map) {
         try {
@@ -498,6 +518,42 @@ public class UserController {
                 result.setMessage("加入成功！");
             } else {
                 result.setMessage("加入失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PutMapping("/joinGroupPermit")
+    public Result joinGroupPermit(@RequestParam("userId") int userId, @RequestParam("groupId") int groupId) {
+        try {
+            Result result = new Result();
+            if (groupMemberService.joinGroupPermit(groupId, userId)) {
+                result.setCode(1);
+                result.setMessage("申请通过！");
+            } else {
+                result.setMessage("程序异常，请重试！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PutMapping("/joinGroupReject")
+    public Result joinGroupReject(@RequestParam("userId") int userId, @RequestParam("groupId") int groupId) {
+        try {
+            Result result = new Result();
+            if (groupMemberService.quitGroup(groupId, userId)) {
+                result.setCode(1);
+                result.setMessage("申请未通过！");
+            } else {
+                result.setMessage("程序异常，请重试！");
             }
             return result;
         } catch (Exception e) {
