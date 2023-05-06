@@ -8,6 +8,8 @@ public interface GroupDao {
     List<Group> selectAll();
     List<Group> selectAllByPage(int start);
     int selectAllNum();
+    List<Group> selectMyGroupByPage(int userId, int start);
+    int selectMyGroupNum(int userId);
     Group selectById(int id);
     Group selectByCreateUser(int userId);
     List<Group> searchGroup(String keyword, int start);

@@ -28,14 +28,26 @@ public class BookRecommendServiceImpl implements IBookRecommendService {
     }
 
     @Override
-    public boolean insert(int bookId, String recommendReason, int userId, int subgroupId) throws IOException {
+    public List<BookRecommend> selectByName(String name) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             BookRecommendDao mapper = session.getMapper(BookRecommendDao.class);
-            mapper.insert(bookId, recommendReason, userId, subgroupId);
+            return mapper.selectByName(name);
+        }
+    }
+
+    @Override
+    public boolean insert(int bookId, String recommendReason, int userId, int subgroupModelId) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            BookRecommendDao mapper = session.getMapper(BookRecommendDao.class);
+            mapper.insert(bookId, recommendReason, userId, subgroupModelId);
             return true;
         } catch (Exception e) {
             return false;

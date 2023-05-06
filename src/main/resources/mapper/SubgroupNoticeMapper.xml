@@ -7,8 +7,12 @@
         select * from subgroup_notice where subgroup_id=#{subgroupId}
     </select>
 
+    <select id="selectByName" resultType="capstone_project.ReadingForum_Backend.Model.SubgroupNotice">
+        select * from subgroup_notice where subgroup_model_id in (select id from subgroup_module where name=#{name})
+    </select>
+
     <insert id="insert">
-        insert into subgroup_notice (title, text, user_id, time, subgroup_id) values (#{title}, #{text}, #{userId}, CURDATE(), #{subgroupId})
+        insert into subgroup_notice (title, text, user_id, time, subgroup_model_id) values (#{title}, #{text}, #{userId}, CURDATE(), #{subgroupModelId})
     </insert>
 
     <update id="update">

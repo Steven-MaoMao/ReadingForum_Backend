@@ -11,8 +11,16 @@
         select * from `group` limit #{start},10
     </select>
 
+    <select id="selectMyGroupByPage" resultType="capstone_project.ReadingForum_Backend.Model.Group">
+        select * from `group` where id in (select group_id from group_member where user_id=#{userId} and state=1) limit #{start},10
+    </select>
+
     <select id="selectAllNum" resultType="int">
         select count(*) from `group`
+    </select>
+
+    <select id="selectMyGroupNum" resultType="int">
+        select count(*) from `group` where id in (select group_id from group_member where user_id=#{userId} and state=1)
     </select>
 
     <select id="selectById" resultType="capstone_project.ReadingForum_Backend.Model.Group">

@@ -6,9 +6,13 @@
     <select id="selectBySubgroupId" resultType="capstone_project.ReadingForum_Backend.Model.BookRecommend">
         select * from book_recommend where subgroup_id=#{subgroupId}
     </select>
+
+    <select id="selectByName" resultType="capstone_project.ReadingForum_Backend.Model.BookRecommend">
+        select * from book_recommend where subgroup_model_id in (select id from subgroup_module where name=#{name})
+    </select>
     
     <insert id="insert">
-        insert into book_recommend (book_id, recommend_reason, user_id, time, subgroup_id) values (#{bookId}, #{recommendReason}, #{userId}, CURDATE(), #{subgroupId})
+        insert into book_recommend (book_id, recommend_reason, user_id, time, subgroup_model_id) values (#{bookId}, #{recommendReason}, #{userId}, CURDATE(), #{subgroupModelId})
     </insert>
     
     <update id="update">

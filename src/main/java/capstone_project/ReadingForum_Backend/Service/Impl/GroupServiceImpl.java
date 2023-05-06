@@ -52,6 +52,30 @@ public class GroupServiceImpl implements IGroupService {
     }
 
     @Override
+    public List<Group> selectMyGroupByPage(int userId, int start) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            GroupDao mapper = session.getMapper(GroupDao.class);
+            return mapper.selectMyGroupByPage(userId, start);
+        }
+    }
+
+    @Override
+    public int selectMyGroupNum(int userId) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            GroupDao mapper = session.getMapper(GroupDao.class);
+            return mapper.selectMyGroupNum(userId);
+        }
+    }
+
+    @Override
     public Group selectById(int id) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);

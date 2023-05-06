@@ -28,14 +28,26 @@ public class SubgroupNoticeServiceImpl implements ISubgroupNoticeService {
     }
 
     @Override
-    public boolean insert(String title, String text, int userId, int subgroupId) throws IOException {
+    public List<SubgroupNotice> selectByName(String name) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             SubgroupNoticeDao mapper = session.getMapper(SubgroupNoticeDao.class);
-            mapper.insert(title, text, userId, subgroupId);
+            return mapper.selectByName(name);
+        }
+    }
+
+    @Override
+    public boolean insert(String title, String text, int userId, int subgroupModelId) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            SubgroupNoticeDao mapper = session.getMapper(SubgroupNoticeDao.class);
+            mapper.insert(title, text, userId, subgroupModelId);
             return true;
         } catch (Exception e) {
             return false;

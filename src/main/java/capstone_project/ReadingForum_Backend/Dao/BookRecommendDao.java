@@ -6,7 +6,8 @@ import java.util.List;
 
 public interface BookRecommendDao {
     List<BookRecommend> selectBySubgroupId(int subgroupId);
-    void insert(int bookId, String recommendReason, int userId, int subgroupId);
+    List<BookRecommend> selectByName(String name);
+    void insert(int bookId, String recommendReason, int userId, int subgroupModelId);
     void update(int bookRecommendId, String recommendReason);
     void delete(int bookRecommendId);
 }

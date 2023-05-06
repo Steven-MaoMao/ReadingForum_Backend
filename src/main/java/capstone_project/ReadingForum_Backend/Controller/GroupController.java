@@ -84,6 +84,35 @@ public class GroupController {
         }
     }
 
+    @GetMapping("/selectMyGroupByPage")
+    public Result selectMyGroupByPage(@RequestHeader("token") String token, @RequestParam("page") int page) {
+        try {
+            String username = JWT.parseToken(token);
+            int userId = userService.selectByUsername(username).getId();
+            int start = (page - 1) * 10;
+            List<Group> groupList = groupService.selectMyGroupByPage(userId, start);
+            int totalGroup = groupService.selectMyGroupNum(userId);
+            for (int i=0;i<groupList.size();i++) {
+                User user = userService.selectById(groupList.get(i).getCreateUser());
+                groupList.get(i).setUsername(user.getUsername());
+                groupList.get(i).setNickname(user.getNickname());
+                groupList.get(i).setUserAvatar(user.getAvatar());
+            }
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("获取我对社团列表成功！");
+            Map map = new HashMap<String, Object>();
+            map.put("groupList", groupList);
+            map.put("totalGroup", totalGroup);
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
     @GetMapping("/searchGroup")
     public Result searchGroup(@RequestParam("keyword") String keyword, @RequestParam("page") int page) {
         try {

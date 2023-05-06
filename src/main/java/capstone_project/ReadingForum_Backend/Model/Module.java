@@ -6,4 +6,6 @@ import lombok.Data;
 public class Module {
     private int id = 0;
     private String name = null;
+//    subgroup_module的id
+    private int subgroupModuleId = 0;
 }

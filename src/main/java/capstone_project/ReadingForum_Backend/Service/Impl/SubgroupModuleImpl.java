@@ -40,14 +40,14 @@ public class SubgroupModuleImpl implements ISubgroupModuleService {
     }
 
     @Override
-    public boolean insert(int subgroupId, int moduleId) throws IOException {
+    public boolean insert(int subgroupId, int moduleId, String name) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             SubgroupModuleDao mapper = session.getMapper(SubgroupModuleDao.class);
-            mapper.insert(subgroupId, moduleId);
+            mapper.insert(subgroupId, moduleId, name);
             return true;
         } catch (Exception e) {
             return false;
@@ -55,14 +55,29 @@ public class SubgroupModuleImpl implements ISubgroupModuleService {
     }
 
     @Override
-    public boolean delete(int subgroupId, int moduleId) throws IOException {
+    public boolean update(String name, int id) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             SubgroupModuleDao mapper = session.getMapper(SubgroupModuleDao.class);
-            mapper.delete(subgroupId, moduleId);
+            mapper.update(name, id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delete(String name) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            SubgroupModuleDao mapper = session.getMapper(SubgroupModuleDao.class);
+            mapper.delete(name);
             return true;
         } catch (Exception e) {
             return false;

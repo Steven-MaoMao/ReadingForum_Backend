@@ -68,9 +68,9 @@ public class SubgroupController {
     }
 
     @GetMapping("/getSubgroupNotice")
-    public Result getSubgroupNotice(@RequestParam("subgroupId") int subgroupId) {
+    public Result getSubgroupNotice(@RequestParam("name") String name) {
         try {
-            List<SubgroupNotice> subgroupNoticeList = subgroupNoticeService.selectBySubgroupId(subgroupId);
+            List<SubgroupNotice> subgroupNoticeList = subgroupNoticeService.selectByName(name);
             for (int i=0;i<subgroupNoticeList.size();i++) {
                 subgroupNoticeList.get(i).setUser(userService.selectById(subgroupNoticeList.get(i).getUserId()));
             }
@@ -89,9 +89,9 @@ public class SubgroupController {
     }
 
     @GetMapping("/getBookRecommend")
-    public Result getBookRecommend(@RequestParam("subgroupId") int subgroupId) {
+    public Result getBookRecommend(@RequestParam("name") String name) {
         try {
-            List<BookRecommend> bookRecommendList = bookRecommendService.selectBySubgroupId(subgroupId);
+            List<BookRecommend> bookRecommendList = bookRecommendService.selectByName(name);
             for (int i=0;i<bookRecommendList.size();i++) {
                 bookRecommendList.get(i).setUser(userService.selectById(bookRecommendList.get(i).getUserId()));
                 Book book = bookService.selectById(bookRecommendList.get(i).getBookId());
@@ -153,7 +153,7 @@ public class SubgroupController {
     public Result createSubgroupNotice(@RequestBody Map<String, String> map) {
         try {
             Result result = new Result();
-            if (subgroupNoticeService.insert(map.get("title"), map.get("text"), Integer.parseInt(map.get("userId")), Integer.parseInt(map.get("subgroupId")))) {
+            if (subgroupNoticeService.insert(map.get("title"), map.get("text"), Integer.parseInt(map.get("userId")), Integer.parseInt(map.get("subgroupModelId")))) {
                 result.setCode(1);
                 result.setMessage("创建成功！");
             } else {
@@ -168,10 +168,10 @@ public class SubgroupController {
     }
 
     @PostMapping("/addSubgroupModule")
-    public Result addSubgroupModule(@RequestParam("subgroupId") int subgroupId, @RequestParam("moduleId") int moduleId) {
+    public Result addSubgroupModule(@RequestParam("subgroupId") int subgroupId, @RequestParam("moduleId") int moduleId, @RequestParam("name") String name) {
         try {
             Result result = new Result();
-            if (subgroupModuleService.insert(subgroupId, moduleId)) {
+            if (subgroupModuleService.insert(subgroupId, moduleId, name)) {
                 result.setCode(1);
                 result.setMessage("添加成功！");
             } else {
@@ -189,7 +189,7 @@ public class SubgroupController {
     public Result addBookRecommend(@RequestBody Map<String, String> map) {
         try {
             Result result = new Result();
-            if (bookRecommendService.insert(Integer.parseInt(map.get("bookId")), map.get("recommendReason"), Integer.parseInt(map.get("userId")), Integer.parseInt(map.get("subgroupId")))) {
+            if (bookRecommendService.insert(Integer.parseInt(map.get("bookId")), map.get("recommendReason"), Integer.parseInt(map.get("userId")), Integer.parseInt(map.get("subgroupModuleId")))) {
                 result.setCode(1);
                 result.setMessage("添加成功！");
             } else {
@@ -208,6 +208,24 @@ public class SubgroupController {
         try {
             Result result = new Result();
             if (subgroupService.update(id, name)) {
+                result.setCode(1);
+                result.setMessage("修改成功！");
+            } else {
+                result.setMessage("修改失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PutMapping("/updateSubgroupModuleName")
+    public Result updateSubgroupModuleName(@RequestParam("name") String name, @RequestParam("id") int id) {
+        try {
+            Result result = new Result();
+            if (subgroupModuleService.update(name, id)) {
                 result.setCode(1);
                 result.setMessage("修改成功！");
             } else {
@@ -294,10 +312,10 @@ public class SubgroupController {
     }
 
     @DeleteMapping("/deleteSubgroupModule")
-    public Result deleteSubgroupModule(@RequestParam("subgroupId") int subgroupId, @RequestParam("moduleId") int moduleId) {
+    public Result deleteSubgroupModule(@RequestParam("moduleName") String moduleName) {
         try {
             Result result = new Result();
-            if (subgroupModuleService.delete(subgroupId, moduleId)) {
+            if (subgroupModuleService.delete(moduleName)) {
                 result.setCode(1);
                 result.setMessage("删除成功！");
             } else {
