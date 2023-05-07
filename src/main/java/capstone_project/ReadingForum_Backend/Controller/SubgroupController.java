@@ -2,6 +2,7 @@ package capstone_project.ReadingForum_Backend.Controller;
 
 import capstone_project.ReadingForum_Backend.Model.*;
 import capstone_project.ReadingForum_Backend.Service.*;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,10 @@ public class SubgroupController {
     private IBookService bookService;
     @Autowired
     private ITagService tagService;
+    @Autowired
+    private ISubgroupVoteService subgroupVoteService;
+    @Autowired
+    private ISubgroupVoteMemberService subgroupVoteMemberService;
 
     @GetMapping("/getSubgroup")
     public Result getSubgroup(@RequestHeader("token") String token, @RequestParam("groupId") int groupId) {
@@ -79,6 +84,32 @@ public class SubgroupController {
             result.setMessage("获取小组公告成功！");
             Map<String, Object> map = new HashMap<>();
             map.put("subgroupNoticeList", subgroupNoticeList);
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @GetMapping("getSubgroupVote")
+    public Result getSubgroupVote(@RequestParam("subgroupModuleId") int subgroupModuleId) {
+        try {
+            List<SubgroupVote> subgroupVoteList = subgroupVoteService.selectBySubgroupModuleId(subgroupModuleId);
+            for (int i=0;i<subgroupVoteList.size();i++) {
+                subgroupVoteList.get(i).setUser(userService.selectById(subgroupVoteList.get(i).getUserId()));
+                List<SubgroupVoteMember> subgroupVoteMemberList = subgroupVoteMemberService.selectBySubgroupVoteId(subgroupVoteList.get(i).getId());
+                for (int j=0;j<subgroupVoteMemberList.size();j++) {
+                    subgroupVoteMemberList.get(j).setUser(userService.selectById(subgroupVoteMemberList.get(j).getUserId()));
+                }
+                subgroupVoteList.get(i).setVoterList(subgroupVoteMemberList);
+            }
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("获取小组投票成功！");
+            Map<String, Object> map = new HashMap<>();
+            map.put("subgroupVoteList", subgroupVoteList);
             result.setData(map);
             return result;
         } catch (Exception e) {
@@ -203,6 +234,30 @@ public class SubgroupController {
         }
     }
 
+    @PostMapping("/createSubgroupVote")
+    public Result createSubgroupVote(@RequestHeader("token") String token, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("subgroupModuleId") int subgroupModuleId, @RequestBody List<Integer> voterIdList) {
+        try {
+            String username = JWT.parseToken(token);
+            int userId = userService.selectByUsername(username).getId();
+            Result result = new Result();
+            if (subgroupVoteService.insert(name, description, subgroupModuleId, userId)) {
+                int id = subgroupVoteService.selectByName(name).getId();
+                for (int i=0;i<voterIdList.size();i++) {
+                    subgroupVoteMemberService.insert(voterIdList.get(i), id, "待投票");
+                }
+                result.setCode(1);
+                result.setMessage("添加成功！");
+            } else {
+                result.setMessage("添加失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
     @PutMapping("/updateSubgroupName")
     public Result updateSubgroupName(@RequestParam("id") int id, @RequestParam("name") String name) {
         try {
@@ -275,6 +330,64 @@ public class SubgroupController {
         }
     }
 
+    @PutMapping("/updateSubgroupVote")
+    public Result updateSubgroupVote(@RequestBody SubgroupVote subgroupVote) {
+        try {
+            Result result = new Result();
+            if (subgroupVoteService.update(subgroupVote)) {
+                result.setCode(1);
+                result.setMessage("修改成功！");
+            } else {
+                result.setMessage("修改失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PutMapping("/voteYes")
+    public Result voteYes(@RequestHeader("token") String token, @RequestParam("id") int id) {
+        try {
+            String username = JWT.parseToken(token);
+            int userId = userService.selectByUsername(username).getId();
+            Result result = new Result();
+            if (subgroupVoteMemberService.voteYes(userId, id)) {
+                result.setCode(1);
+                result.setMessage("投票成功！");
+            } else {
+                result.setMessage("投票失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PutMapping("/voteNo")
+    public Result voteNo(@RequestHeader("token") String token, @RequestParam("id") int id) {
+        try {
+            String username = JWT.parseToken(token);
+            int userId = userService.selectByUsername(username).getId();
+            Result result = new Result();
+            if (subgroupVoteMemberService.voteNo(userId, id)) {
+                result.setCode(1);
+                result.setMessage("投票成功！");
+            } else {
+                result.setMessage("投票失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
     @DeleteMapping("/deleteSubgroup")
     public Result deleteSubgroup(@RequestParam("id") int id) {
         try {
@@ -334,6 +447,24 @@ public class SubgroupController {
         try {
             Result result = new Result();
             if (bookRecommendService.delete(id)) {
+                result.setCode(1);
+                result.setMessage("删除成功！");
+            } else {
+                result.setMessage("删除失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @DeleteMapping("/deleteSubgroupVote")
+    public Result deleteSubgroupVote(@RequestParam("id") int id) {
+        try {
+            Result result = new Result();
+            if (subgroupVoteService.delete(id)) {
                 result.setCode(1);
                 result.setMessage("删除成功！");
             } else {

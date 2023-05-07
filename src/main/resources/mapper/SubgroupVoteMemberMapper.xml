@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="capstone_project.ReadingForum_Backend.Dao.SubgroupVoteMemberDao">
+    <select id="selectBySubgroupVoteId" resultType="capstone_project.ReadingForum_Backend.Model.SubgroupVoteMember">
+        select * from subgroup_vote_member where subgroup_vote_id=#{subgroupVoteId}
+    </select>
+
+    <insert id="insert">
+        insert into subgroup_vote_member (user_id, subgroup_vote_id, state) values (#{userId}, #{subgroupVoteId}, #{state})
+    </insert>
+
+    <update id="voteYes">
+        update subgroup_vote_member set state="赞成" where user_id=#{userId} and subgroup_vote_id=#{subgroupVoteId}
+    </update>
+
+    <update id="voteNo">
+        update subgroup_vote_member set state="反对" where user_id=#{userId} and subgroup_vote_id=#{subgroupVoteId}
+    </update>
+</mapper>

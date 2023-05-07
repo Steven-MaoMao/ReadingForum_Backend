@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="capstone_project.ReadingForum_Backend.Dao.SubgroupVoteDao">
+    <select id="selectBySubgroupModuleId" resultType="capstone_project.ReadingForum_Backend.Model.SubgroupVote">
+        select * from subgroup_vote where subgroup_module_id=#{subgroupModuleId}
+    </select>
+
+    <select id="selectByName" resultType="capstone_project.ReadingForum_Backend.Model.SubgroupVote">
+        select * from subgroup_vote where name=#{name}
+    </select>
+
+    <insert id="insert">
+        insert into subgroup_vote (name, description, time, subgroup_module_id, user_id) values (#{name}, #{description}, CURDATE(), #{subgroupModuleId}, #{userId})
+    </insert>
+
+    <update id="update">
+        update subgroup_vote set name=#{name}, description=#{description} where id=#{id}
+    </update>
+
+    <delete id="delete">
+        delete from subgroup_vote where id=#{id}
+    </delete>
+</mapper>
