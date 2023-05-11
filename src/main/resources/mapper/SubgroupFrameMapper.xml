@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="capstone_project.ReadingForum_Backend.Dao.SubgroupFrameDao">
+    <select id="selectBySubgroupId" resultType="capstone_project.ReadingForum_Backend.Model.SubgroupFrame">
+        select * from subgroup_frame where subgroup_id=#{subgroupId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into subgroup_frame (frame_id, user_id, time, subgroup_id) values (#{frameId}, #{userId}, CURDATE(), #{subgroupId})
+    </insert>
+
+    <delete id="delete">
+        delete from subgroup_frame where id=#{subgroupFrameId}
+    </delete>
+</mapper>

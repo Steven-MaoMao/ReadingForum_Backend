@@ -12,4 +12,6 @@ public class Subgroup {
     private int groupId = 0;
     private List<User> subgroupMember = null;
     private List<Module> moduleList = null;
+    private List<SubgroupFrame> subgroupFrameList = null;
+    private int frameId = 0;
 }

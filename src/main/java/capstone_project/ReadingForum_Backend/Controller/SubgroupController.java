@@ -34,6 +34,8 @@ public class SubgroupController {
     private ISubgroupVoteService subgroupVoteService;
     @Autowired
     private ISubgroupVoteMemberService subgroupVoteMemberService;
+    @Autowired
+    private ISubgroupFrameService subgroupFrameService;
 
     @GetMapping("/getSubgroup")
     public Result getSubgroup(@RequestHeader("token") String token, @RequestParam("groupId") int groupId) {
@@ -52,7 +54,8 @@ public class SubgroupController {
                 }
                 if (isContained) {
                     subgroupList.get(i).setSubgroupMember(userService.selectSubgroupMember(subgroupList.get(i).getId()));
-                    subgroupList.get(i).setModuleList(subgroupModuleService.selectBySubgroupId(subgroupList.get(i).getId()));
+                    // subgroupList.get(i).setModuleList(subgroupModuleService.selectBySubgroupId(subgroupList.get(i).getId()));
+                    subgroupList.get(i).setSubgroupFrameList(subgroupFrameService.selectBySubgroupId(subgroupList.get(i).getId()));
                 } else {
                     subgroupList.remove(i);
                     i--;
@@ -73,9 +76,9 @@ public class SubgroupController {
     }
 
     @GetMapping("/getSubgroupNotice")
-    public Result getSubgroupNotice(@RequestParam("name") String name) {
+    public Result getSubgroupNotice(@RequestParam("id") int id) {
         try {
-            List<SubgroupNotice> subgroupNoticeList = subgroupNoticeService.selectByName(name);
+            List<SubgroupNotice> subgroupNoticeList = subgroupNoticeService.selectByName(id);
             for (int i=0;i<subgroupNoticeList.size();i++) {
                 subgroupNoticeList.get(i).setUser(userService.selectById(subgroupNoticeList.get(i).getUserId()));
             }
@@ -120,9 +123,9 @@ public class SubgroupController {
     }
 
     @GetMapping("/getBookRecommend")
-    public Result getBookRecommend(@RequestParam("name") String name) {
+    public Result getBookRecommend(@RequestParam("id") int id) {
         try {
-            List<BookRecommend> bookRecommendList = bookRecommendService.selectByName(name);
+            List<BookRecommend> bookRecommendList = bookRecommendService.selectByName(id);
             for (int i=0;i<bookRecommendList.size();i++) {
                 bookRecommendList.get(i).setUser(userService.selectById(bookRecommendList.get(i).getUserId()));
                 Book book = bookService.selectById(bookRecommendList.get(i).getBookId());
@@ -162,9 +165,9 @@ public class SubgroupController {
     }
 
     @PostMapping("/createSubgroup")
-    public Result createSubgroup(@RequestParam("name") String name, @RequestParam("groupId") int groupId, @RequestBody List<Integer> memberList) {
+    public Result createSubgroup(@RequestParam("name") String name, @RequestParam("groupId") int groupId, @RequestParam("frameId") int frameId, @RequestBody List<Integer> memberList) {
         try {
-            subgroupService.insert(name, groupId);
+            subgroupService.insert(name, groupId, frameId);
             int id = subgroupService.selectByName(name).getId();
             for (int i=0;i<memberList.size();i++) {
                 subgroupMemberService.insert(memberList.get(i), id);
@@ -181,14 +184,42 @@ public class SubgroupController {
     }
 
     @PostMapping("/createSubgroupNotice")
-    public Result createSubgroupNotice(@RequestBody Map<String, String> map) {
+    public Result createSubgroupNotice(@RequestHeader("token") String token, @RequestParam("subgroupId") int subgroupId, @RequestBody Map<String, String> map) {
         try {
+            String username = JWT.parseToken(token);
+            int id = userService.selectByUsername(username).getId();
             Result result = new Result();
-            if (subgroupNoticeService.insert(map.get("title"), map.get("text"), Integer.parseInt(map.get("userId")), Integer.parseInt(map.get("subgroupModelId")))) {
+            SubgroupFrame subgroupFrame = new SubgroupFrame();
+            subgroupFrame.setFrameId(1);
+            subgroupFrame.setUserId(id);
+            subgroupFrame.setSubgroupId(subgroupId);
+            subgroupFrameService.insert(subgroupFrame);
+            int subgroupFrameId = subgroupFrame.getId();
+            if (subgroupNoticeService.insert(map.get("title"), map.get("text"), Integer.parseInt(map.get("userId")), subgroupFrameId)) {
                 result.setCode(1);
                 result.setMessage("创建成功！");
             } else {
                 result.setMessage("创建失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PostMapping("/newComment")
+    public Result newComment(@RequestHeader("token") String token, @RequestParam("comment") String comment, @RequestParam("subgroupFrameId") int subgroupFrameId) {
+        try {
+            String username = JWT.parseToken(token);
+            int id = userService.selectByUsername(username).getId();
+            Result result = new Result();
+            if (subgroupNoticeService.insert(comment, comment, id, subgroupFrameId)) {
+                result.setCode(1);
+                result.setMessage("添加成功！");
+            } else {
+                result.setMessage("添加失败！");
             }
             return result;
         } catch (Exception e) {
@@ -217,10 +248,18 @@ public class SubgroupController {
     }
 
     @PostMapping("/addBookRecommend")
-    public Result addBookRecommend(@RequestBody Map<String, String> map) {
+    public Result addBookRecommend(@RequestHeader("token") String token, @RequestParam("subgroupId") int subgroupId, @RequestParam("subgroupName") String name, @RequestBody Map<String, String> map) {
         try {
+            String username = JWT.parseToken(token);
+            int id = userService.selectByUsername(username).getId();
             Result result = new Result();
-            if (bookRecommendService.insert(Integer.parseInt(map.get("bookId")), map.get("recommendReason"), Integer.parseInt(map.get("userId")), Integer.parseInt(map.get("subgroupModuleId")))) {
+            SubgroupFrame subgroupFrame = new SubgroupFrame();
+            subgroupFrame.setFrameId(subgroupService.selectByName(name).getFrameId());
+            subgroupFrame.setUserId(id);
+            subgroupFrame.setSubgroupId(subgroupId);
+            subgroupFrameService.insert(subgroupFrame);
+            int subgroupFrameId = subgroupFrame.getId();
+            if (bookRecommendService.insert(Integer.parseInt(map.get("bookId")), map.get("recommendReason"), Integer.parseInt(map.get("userId")), subgroupFrameId)) {
                 result.setCode(1);
                 result.setMessage("添加成功！");
             } else {
@@ -235,12 +274,18 @@ public class SubgroupController {
     }
 
     @PostMapping("/createSubgroupVote")
-    public Result createSubgroupVote(@RequestHeader("token") String token, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("subgroupModuleId") int subgroupModuleId, @RequestBody List<Integer> voterIdList) {
+    public Result createSubgroupVote(@RequestHeader("token") String token, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("subgroupId") int subgroupId, @RequestParam("subgroupName") String subgroupName, @RequestBody List<Integer> voterIdList) {
         try {
             String username = JWT.parseToken(token);
             int userId = userService.selectByUsername(username).getId();
             Result result = new Result();
-            if (subgroupVoteService.insert(name, description, subgroupModuleId, userId)) {
+            SubgroupFrame subgroupFrame = new SubgroupFrame();
+            subgroupFrame.setFrameId(subgroupService.selectByName(subgroupName).getFrameId());
+            subgroupFrame.setUserId(userId);
+            subgroupFrame.setSubgroupId(subgroupId);
+            subgroupFrameService.insert(subgroupFrame);
+            int subgroupFrameId = subgroupFrame.getId();
+            if (subgroupVoteService.insert(name, description, subgroupFrameId, userId)) {
                 int id = subgroupVoteService.selectByName(name).getId();
                 for (int i=0;i<voterIdList.size();i++) {
                     subgroupVoteMemberService.insert(voterIdList.get(i), id, "待投票");
@@ -410,7 +455,7 @@ public class SubgroupController {
     public Result deleteSubgroupNotice(@RequestParam("id") int id) {
         try {
             Result result = new Result();
-            if (subgroupNoticeService.delete(id)) {
+            if (subgroupFrameService.delete(id)) {
                 result.setCode(1);
                 result.setMessage("删除成功！");
             } else {
@@ -446,7 +491,7 @@ public class SubgroupController {
     public Result deleteBookRecommend(@RequestParam("id") int id) {
         try {
             Result result = new Result();
-            if (bookRecommendService.delete(id)) {
+            if (subgroupFrameService.delete(id)) {
                 result.setCode(1);
                 result.setMessage("删除成功！");
             } else {
@@ -464,7 +509,7 @@ public class SubgroupController {
     public Result deleteSubgroupVote(@RequestParam("id") int id) {
         try {
             Result result = new Result();
-            if (subgroupVoteService.delete(id)) {
+            if (subgroupFrameService.delete(id)) {
                 result.setCode(1);
                 result.setMessage("删除成功！");
             } else {

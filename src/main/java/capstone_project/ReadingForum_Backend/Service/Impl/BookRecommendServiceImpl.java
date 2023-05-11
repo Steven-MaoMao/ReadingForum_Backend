@@ -28,14 +28,14 @@ public class BookRecommendServiceImpl implements IBookRecommendService {
     }
 
     @Override
-    public List<BookRecommend> selectByName(String name) throws IOException {
+    public List<BookRecommend> selectByName(int id) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             BookRecommendDao mapper = session.getMapper(BookRecommendDao.class);
-            return mapper.selectByName(name);
+            return mapper.selectByName(id);
         }
     }
 

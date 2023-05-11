@@ -8,7 +8,7 @@
     </select>
 
     <select id="selectByName" resultType="capstone_project.ReadingForum_Backend.Model.BookRecommend">
-        select * from book_recommend where subgroup_model_id in (select id from subgroup_module where name=#{name})
+        select * from book_recommend where subgroup_model_id =#{id}
     </select>
     
     <insert id="insert">

@@ -7,7 +7,7 @@ import java.util.List;
 public interface SubgroupDao {
     Subgroup selectByName(String subgroupName);
     List<Subgroup> selectByGroupId(int groupId);
-    void insert(String subgroupName, int groupId);
+    void insert(String subgroupName, int groupId, int frameId);
     void update(int subgroupId, String subgroupName);
     void delete(int subgroupId);
 }
