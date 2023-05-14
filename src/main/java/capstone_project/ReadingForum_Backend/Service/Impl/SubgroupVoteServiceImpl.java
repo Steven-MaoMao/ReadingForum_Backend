@@ -40,14 +40,14 @@ public class SubgroupVoteServiceImpl implements ISubgroupVoteService {
     }
 
     @Override
-    public boolean insert(String name, String description, int subgroupModuleId, int userId) throws IOException {
+    public boolean insert(String name, String description, int subgroupModuleId, int userId, String yesWord, String noWord) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             SubgroupVoteDao mapper = session.getMapper(SubgroupVoteDao.class);
-            mapper.insert(name, description, subgroupModuleId, userId);
+            mapper.insert(name, description, subgroupModuleId, userId, yesWord, noWord);
             return true;
         } catch (Exception e) {
             return false;

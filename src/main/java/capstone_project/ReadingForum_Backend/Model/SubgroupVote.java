@@ -14,4 +14,6 @@ public class SubgroupVote {
     private int userId = 0;
     private User user = null;
     private List<SubgroupVoteMember> voterList = null;
+    private String yesWord = null;
+    private String noWord = null;
 }

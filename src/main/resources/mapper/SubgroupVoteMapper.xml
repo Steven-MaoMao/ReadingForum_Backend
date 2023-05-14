@@ -12,11 +12,11 @@
     </select>
 
     <insert id="insert">
-        insert into subgroup_vote (name, description, time, subgroup_module_id, user_id) values (#{name}, #{description}, CURDATE(), #{subgroupModuleId}, #{userId})
+        insert into subgroup_vote (name, description, time, subgroup_module_id, user_id, yes_word, no_word) values (#{name}, #{description}, CURDATE(), #{subgroupModuleId}, #{userId}, #{yesWord}, #{noWord})
     </insert>
 
     <update id="update">
-        update subgroup_vote set name=#{name}, description=#{description} where id=#{id}
+        update subgroup_vote set name=#{name}, description=#{description}, yes_word=#{yesWord}, no_word=#{noWord} where id=#{id}
     </update>
 
     <delete id="delete">

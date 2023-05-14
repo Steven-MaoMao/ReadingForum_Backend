@@ -274,7 +274,7 @@ public class SubgroupController {
     }
 
     @PostMapping("/createSubgroupVote")
-    public Result createSubgroupVote(@RequestHeader("token") String token, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("subgroupId") int subgroupId, @RequestParam("subgroupName") String subgroupName, @RequestBody List<Integer> voterIdList) {
+    public Result createSubgroupVote(@RequestHeader("token") String token, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("subgroupId") int subgroupId, @RequestParam("subgroupName") String subgroupName, @RequestParam("yesWord") String yesWord, @RequestParam("noWord") String noWord, @RequestBody List<Integer> voterIdList) {
         try {
             String username = JWT.parseToken(token);
             int userId = userService.selectByUsername(username).getId();
@@ -285,7 +285,37 @@ public class SubgroupController {
             subgroupFrame.setSubgroupId(subgroupId);
             subgroupFrameService.insert(subgroupFrame);
             int subgroupFrameId = subgroupFrame.getId();
-            if (subgroupVoteService.insert(name, description, subgroupFrameId, userId)) {
+            if (subgroupVoteService.insert(name, description, subgroupFrameId, userId, yesWord, noWord)) {
+                int id = subgroupVoteService.selectByName(name).getId();
+                for (int i=0;i<voterIdList.size();i++) {
+                    subgroupVoteMemberService.insert(voterIdList.get(i), id, "待投票");
+                }
+                result.setCode(1);
+                result.setMessage("添加成功！");
+            } else {
+                result.setMessage("添加失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PostMapping("/createBookVote")
+    public Result createBookVote(@RequestHeader("token") String token, @RequestParam("subgroupId") int subgroupId, @RequestParam("subgroupName") String subgroupName, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("yesWord") String yesWord, @RequestParam("noWord") String noWord, @RequestParam("bookId") int bookId, @RequestParam("recommendReason") String recommendReason, @RequestParam("userId") int user, @RequestParam("subgroupModuleId") int subgroupModuleId, @RequestBody List<Integer> voterIdList) {
+        try {
+            String username = JWT.parseToken(token);
+            int userId = userService.selectByUsername(username).getId();
+            Result result = new Result();
+            SubgroupFrame subgroupFrame = new SubgroupFrame();
+            subgroupFrame.setFrameId(subgroupService.selectByName(subgroupName).getFrameId());
+            subgroupFrame.setUserId(userId);
+            subgroupFrame.setSubgroupId(subgroupId);
+            subgroupFrameService.insert(subgroupFrame);
+            int subgroupFrameId = subgroupFrame.getId();
+            if (subgroupVoteService.insert(name, description, subgroupFrameId, userId, yesWord, noWord) && bookRecommendService.insert(bookId, recommendReason, userId, subgroupFrameId)) {
                 int id = subgroupVoteService.selectByName(name).getId();
                 for (int i=0;i<voterIdList.size();i++) {
                     subgroupVoteMemberService.insert(voterIdList.get(i), id, "待投票");
@@ -507,6 +537,24 @@ public class SubgroupController {
 
     @DeleteMapping("/deleteSubgroupVote")
     public Result deleteSubgroupVote(@RequestParam("id") int id) {
+        try {
+            Result result = new Result();
+            if (subgroupFrameService.delete(id)) {
+                result.setCode(1);
+                result.setMessage("删除成功！");
+            } else {
+                result.setMessage("删除失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @DeleteMapping("/deleteSubgroupFrame")
+    public Result deleteSubgroupFrame(@RequestParam("id") int id) {
         try {
             Result result = new Result();
             if (subgroupFrameService.delete(id)) {

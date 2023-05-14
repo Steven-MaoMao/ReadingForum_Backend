@@ -7,7 +7,7 @@ import java.util.List;
 public interface SubgroupVoteDao {
     List<SubgroupVote> selectBySubgroupModuleId(int subgroupModuleId);
     SubgroupVote selectByName(String name);
-    void insert(String name, String description, int subgroupModuleId, int userId);
+    void insert(String name, String description, int subgroupModuleId, int userId, String yesWord, String noWord);
     void update(SubgroupVote subgroupVote);
     void delete(int id);
 }
