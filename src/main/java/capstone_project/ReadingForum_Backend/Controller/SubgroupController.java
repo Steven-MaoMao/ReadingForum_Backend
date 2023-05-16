@@ -4,12 +4,12 @@ import capstone_project.ReadingForum_Backend.Model.*;
 import capstone_project.ReadingForum_Backend.Service.*;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
 @RestController
 @RequestMapping("/subgroup")
@@ -36,6 +36,9 @@ public class SubgroupController {
     private ISubgroupVoteMemberService subgroupVoteMemberService;
     @Autowired
     private ISubgroupFrameService subgroupFrameService;
+
+    @Value("${web.uploadPath}")
+    private String baseUploadPath;
 
     @GetMapping("/getSubgroup")
     public Result getSubgroup(@RequestHeader("token") String token, @RequestParam("groupId") int groupId) {
@@ -164,6 +167,49 @@ public class SubgroupController {
         }
     }
 
+    @PostMapping("/uploadActivityRecommendPic")
+    public Result uploadAvatar(@RequestHeader("token") String token, @RequestParam("file") MultipartFile newAvatar) {
+        try {
+            String username = JWT.parseToken(token);
+            User user = userService.selectByUsername(username);
+            Result result = new Result();
+//            if (!user.isGroupManager()) {
+//                result.setMessage("你没有修改权限！");
+//                return result;
+//            }
+//            int groupId = user.getGroupId();
+//            Group group = groupService.selectById(groupId);
+            if (newAvatar.isEmpty()) {
+                result.setMessage("文件为空，上传失败！");
+                return result;
+            }
+            String[] splitFilename = newAvatar.getOriginalFilename().split("\\.");
+            String ext = "." + splitFilename[splitFilename.length - 1];
+            String uuid = UUID.randomUUID().toString();
+            String newAvatarName = baseUploadPath + "ActivityRecommendPic/" + uuid + ext;
+            newAvatar.transferTo(new File(newAvatarName));
+//            if (group.getAvatar() != null) {
+//                File oldAvatar = new File(baseUploadPath + group.getAvatar().substring(10));
+//                if (oldAvatar.exists()) {
+//                    oldAvatar.delete();
+//                }
+//            }
+            String avatarPath = "/resources/ActivityRecommendPic/" + uuid + ext;
+//            group.setAvatar(avatarPath);
+//            groupService.update(group);
+            result.setCode(1);
+            result.setMessage("上传成功！");
+            Map map = new HashMap<String, String>();
+            map.put("path", avatarPath);
+            result.setData(map);
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("上传失败！");
+            return result;
+        }
+    }
+
     @PostMapping("/createSubgroup")
     public Result createSubgroup(@RequestParam("name") String name, @RequestParam("groupId") int groupId, @RequestParam("frameId") int frameId, @RequestBody List<Integer> memberList) {
         try {
@@ -175,6 +221,78 @@ public class SubgroupController {
             Result result = new Result();
             result.setCode(1);
             result.setMessage("创建小组成功！");
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PostMapping("/createSubgroupWithText")
+    public Result createSubgroupWithText(@RequestParam("name") String name, @RequestParam("groupId") int groupId, @RequestParam("frameId") int frameId, @RequestParam("text") String text, @RequestBody List<Integer> memberList) {
+        try {
+            subgroupService.insertWithText(name, groupId, frameId, text);
+            int id = subgroupService.selectByName(name).getId();
+            for (int i=0;i<memberList.size();i++) {
+                subgroupMemberService.insert(memberList.get(i), id);
+            }
+            Result result = new Result();
+            result.setCode(1);
+            result.setMessage("创建小组成功！");
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PostMapping("/createSubgroupFrameWithText")
+    public Result createSubgroupFrameWithText(@RequestHeader("token") String token, @RequestParam("subgroupId") int subgroupId, @RequestParam("text") String text, @RequestParam("frameId") int frameId) {
+        try {
+            String username = JWT.parseToken(token);
+            int id = userService.selectByUsername(username).getId();
+            Result result = new Result();
+            SubgroupFrame subgroupFrame = new SubgroupFrame();
+            subgroupFrame.setFrameId(frameId);
+            subgroupFrame.setUserId(id);
+            subgroupFrame.setSubgroupId(subgroupId);
+            subgroupFrame.setText(text);
+            subgroupFrameService.insertWithText(subgroupFrame);
+            result.setCode(1);
+            result.setMessage("创建小组成功！");
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.setMessage("程序异常，请重试！");
+            return result;
+        }
+    }
+
+    @PostMapping("/createActivityRecommendWithVote")
+    public Result createActivityWithVote(@RequestHeader("token") String token, @RequestParam("subgroupId") int subgroupId, @RequestParam("text") String text, @RequestParam("frameId") int frameId, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("yesWord") String yesWord, @RequestParam("noWord") String noWord, @RequestBody List<Integer> voterIdList) {
+        try {
+            String username = JWT.parseToken(token);
+            int userId = userService.selectByUsername(username).getId();
+            Result result = new Result();
+            SubgroupFrame subgroupFrame = new SubgroupFrame();
+            subgroupFrame.setFrameId(frameId);
+            subgroupFrame.setUserId(userId);
+            subgroupFrame.setSubgroupId(subgroupId);
+            subgroupFrame.setText(text);
+            subgroupFrameService.insertWithText(subgroupFrame);
+            int subgroupFrameId = subgroupFrame.getId();
+            if (subgroupVoteService.insert(name, description, subgroupFrameId, userId, yesWord, noWord)) {
+                int id = subgroupVoteService.selectByName(name).getId();
+                for (int i=0;i<voterIdList.size();i++) {
+                    subgroupVoteMemberService.insert(voterIdList.get(i), id, "待投票");
+                }
+                result.setCode(1);
+                result.setMessage("添加成功！");
+            } else {
+                result.setMessage("添加失败！");
+            }
             return result;
         } catch (Exception e) {
             Result result = new Result();

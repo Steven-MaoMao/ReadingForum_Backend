@@ -102,4 +102,16 @@ public class UserDaoTest {
             mapper.insert("book", "book", 25, 7, "111", "222");
         }
     }
+
+    @Test
+    public void insertSubgroupWithTextTest() throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            SubgroupDao mapper = session.getMapper(SubgroupDao.class);
+            mapper.insertWithText("111", 16, 1, "111");
+        }
+    }
 }

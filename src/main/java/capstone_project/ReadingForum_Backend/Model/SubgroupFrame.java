@@ -9,4 +9,5 @@ public class SubgroupFrame {
     private int userId = 0;
     private String time = null;
     private int subgroupId = 0;
+    private String text = null;
 }

@@ -12,7 +12,11 @@
     </select>
 
     <insert id="insert">
-        insert into subgroup (name, time, group_id, frame_id) values (#{subgroupName}, CURDATE(), #{groupId}, #{frameId})
+        insert into subgroup (name, time, group_id, frame_id, text) values (#{subgroupName}, CURDATE(), #{groupId}, #{frameId}, null)
+    </insert>
+
+    <insert id="insertWithText">
+        insert into subgroup (name, time, group_id, frame_id, text) values (#{subgroupName}, CURDATE(), #{groupId}, #{frameId}, #{text})
     </insert>
 
     <update id="update">

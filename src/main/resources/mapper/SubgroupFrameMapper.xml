@@ -8,7 +8,11 @@
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into subgroup_frame (frame_id, user_id, time, subgroup_id) values (#{frameId}, #{userId}, CURDATE(), #{subgroupId})
+        insert into subgroup_frame (frame_id, user_id, time, subgroup_id, text) values (#{frameId}, #{userId}, CURDATE(), #{subgroupId}, null)
+    </insert>
+
+    <insert id="insertWithText" useGeneratedKeys="true" keyProperty="id">
+        insert into subgroup_frame (frame_id, user_id, time, subgroup_id, text) values (#{frameId}, #{userId}, CURDATE(), #{subgroupId}, #{text})
     </insert>
 
     <delete id="delete">

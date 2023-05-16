@@ -55,6 +55,21 @@ public class SubgroupServiceImpl implements ISubgroupService {
     }
 
     @Override
+    public boolean insertWithText(String subgroupName, int groupId, int frameId, String text) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            SubgroupDao mapper = session.getMapper(SubgroupDao.class);
+            mapper.insertWithText(subgroupName, groupId, frameId, text);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
     public boolean update(int subgroupId, String subgroupName) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);

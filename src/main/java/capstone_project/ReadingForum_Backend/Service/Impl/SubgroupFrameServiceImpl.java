@@ -40,6 +40,18 @@ public class SubgroupFrameServiceImpl implements ISubgroupFrameService {
     }
 
     @Override
+    public int insertWithText(SubgroupFrame subgroupFrame) throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            SubgroupFrameDao mapper = session.getMapper(SubgroupFrameDao.class);
+            return mapper.insertWithText(subgroupFrame);
+        }
+    }
+
+    @Override
     public boolean delete(int subgroupFrameId) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);

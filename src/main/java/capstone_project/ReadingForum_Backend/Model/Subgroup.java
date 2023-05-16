@@ -14,4 +14,5 @@ public class Subgroup {
     private List<Module> moduleList = null;
     private List<SubgroupFrame> subgroupFrameList = null;
     private int frameId = 0;
+    private String text = null;
 }

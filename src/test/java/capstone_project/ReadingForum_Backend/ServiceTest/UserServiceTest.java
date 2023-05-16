@@ -51,7 +51,7 @@ public class UserServiceTest {
 
     @Test
     public void insertSubgroupTest() throws IOException {
-        System.out.println(subgroupService.insert("111", 16, 1));
+        System.out.println(subgroupService.insertWithText("111", 16, 1, "111"));
     }
 
     @Test
