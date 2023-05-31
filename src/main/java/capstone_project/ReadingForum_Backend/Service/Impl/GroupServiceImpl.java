@@ -88,7 +88,7 @@ public class GroupServiceImpl implements IGroupService {
     }
 
     @Override
-    public Group selectByCreateUser(int userId) throws IOException {
+    public List<Group> selectByCreateUser(int userId) throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);

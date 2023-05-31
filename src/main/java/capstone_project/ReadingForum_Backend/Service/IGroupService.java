@@ -12,7 +12,7 @@ public interface IGroupService {
     List<Group> selectMyGroupByPage(int userId, int start) throws IOException;
     int selectMyGroupNum(int userId) throws IOException;
     Group selectById(int id) throws IOException;
-    Group selectByCreateUser(int userId) throws IOException;
+    List<Group> selectByCreateUser(int userId) throws IOException;
     List<Group> searchGroup(String keyword, int start) throws IOException;
     int searchGroupNum(String keyword) throws IOException;
     List<Group> selectTopFiveGroup() throws IOException;

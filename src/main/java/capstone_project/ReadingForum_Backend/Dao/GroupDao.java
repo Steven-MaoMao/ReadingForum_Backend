@@ -11,7 +11,7 @@ public interface GroupDao {
     List<Group> selectMyGroupByPage(int userId, int start);
     int selectMyGroupNum(int userId);
     Group selectById(int id);
-    Group selectByCreateUser(int userId);
+    List<Group> selectByCreateUser(int userId);
     List<Group> searchGroup(String keyword, int start);
     int searchGroupNum(String keyword);
     List<Group> selectTopFiveGroup();

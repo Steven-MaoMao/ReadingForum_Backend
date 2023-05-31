@@ -370,18 +370,24 @@ public class UserController {
     @PostMapping("/uploadAvatar")
     public Result uploadAvatar(@RequestHeader("token") String token, @RequestParam("file") MultipartFile newAvatar) {
         try {
+            // 通过token获得用户id
             String username = JWT.parseToken(token);
             User user = userService.selectByUsername(username);
             Result result = new Result();
+            // 检查文件是否为空
             if (newAvatar.isEmpty()) {
                 result.setMessage("文件为空，上传失败！");
                 return result;
             }
+            // 获得文件后缀名
             String[] splitFilename = newAvatar.getOriginalFilename().split("\\.");
             String ext = "." + splitFilename[splitFilename.length - 1];
+            // 通过uuid重命名文件防止文件名重复
             String uuid = UUID.randomUUID().toString();
             String newAvatarName = baseUploadPath + "Avatar/" + uuid + ext;
+            // 在服务器保存文件
             newAvatar.transferTo(new File(newAvatarName));
+            // 删除用户原来的头像文件
             if (user.getAvatar() != null) {
                 File oldAvatar = new File(baseUploadPath + user.getAvatar().substring(10));
                 if (oldAvatar.exists()) {
@@ -389,6 +395,7 @@ public class UserController {
                 }
             }
             String avatarPath = "/resources/Avatar/" + uuid + ext;
+            // 更新数据库中的用户头像路径
             user.setAvatar(avatarPath);
             userService.update(user);
             result.setCode(1);

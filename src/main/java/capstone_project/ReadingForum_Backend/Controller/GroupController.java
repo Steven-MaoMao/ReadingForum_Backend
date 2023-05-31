@@ -260,11 +260,12 @@ public class GroupController {
             int id = user.getId();
             String name = map.get("name").toString();
             groupService.insert(name, id);
-            int groupId = groupService.selectByCreateUser(id).getId();
+            int groupId = groupService.selectByCreateUser(id).get(groupService.selectByCreateUser(id).size() - 1).getId();
 //            userService.joinGroup(groupId, id);
 //            userService.setGroupManager(id);
             groupMemberService.joinGroup(groupId, id);
             groupMemberService.setGroupManager(groupId, id);
+            groupMemberService.joinGroupPermit(groupId, id);
             Result result = new Result();
             result.setCode(1);
             result.setMessage("创建成功！");
